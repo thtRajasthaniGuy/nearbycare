@@ -1283,7 +1283,8 @@ function ShareButtons({ org }) {
 - No authentication required for visitors/submissions
 ---
 
-// Cloud Function: Anonymous Submission
+### 8.6 Cloud Function: Anonymous Submission
+
 export const submitOrganizationAnonymous = functions
   .region('asia-south1')
   .https.onCall(async (data, context) => {
