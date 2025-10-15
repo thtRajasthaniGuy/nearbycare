@@ -72,37 +72,35 @@ NearbyCare is a **100% free**, community-driven, location-based web platform des
 
 ### Primary Personas
 
-#### 1. Donors & Volunteers
-- **Profile**: Individuals seeking to contribute locally (goods, funds, volunteer time)
+#### 1. Anonymous Visitors & Contributors
+- **Profile**: Anyone who wants to discover or submit NGO information (no account needed)
 - **Pain Points**:
   - Don't know which NGOs operate near them
+  - Want to help NGOs get discovered but don't want account hassle
   - Unsure if organization is legitimate
-  - Can't visualize NGO distribution across regions
-- **Our Solution**: Interactive India map with verified markers, filtering by type/region
+- **Our Solution**: 
+  - Browse map without login
+  - Submit NGO details anonymously (just email for updates)
+  - View verified listings
 
-#### 2. NGO Administrators
-- **Profile**: Small to medium NGOs lacking digital presence
+#### 2. NGO Administrators (Account Required)
+- **Profile**: NGO representatives who want to manage their organization's profile
 - **Pain Points**:
   - Limited visibility in local community
   - No platform to showcase their work
-  - Difficulty communicating donation needs
-- **Our Solution**: Free profile management, map visibility, photo galleries
+  - Need to update donation needs regularly
+- **Our Solution**: 
+  - Free account creation for verified NGOs
+  - Full profile management dashboard
+  - Real-time updates to their listing
 
-#### 3. Community Contributors
-- **Profile**: Citizens aware of local welfare organizations
-- **Pain Points**:
-  - No way to help small NGOs get discovered
-  - Want to support community but lack platforms
-- **Our Solution**: Simple submission portal, map contribution
-
-#### 4. Platform Administrators
+#### 3. Platform Administrators
 - **Profile**: Moderators ensuring data quality and authenticity
 - **Responsibilities**:
-  - Review and verify submissions
-  - Moderate content and handle reports
-  - Maintain map data accuracy
-- **Our Solution**: Comprehensive admin dashboard with approval workflows
-
+  - Review anonymous submissions
+  - Verify NGO accounts
+  - Maintain platform integrity
+- **Our Solution**: Comprehensive admin dashboard
 ---
 
 ## 4. System Architecture
@@ -259,35 +257,30 @@ nearbycare (root)
 
 ```typescript
 {
-  // Document ID: Firebase Auth UID
+  // Document ID: Firebase Auth UID (only for NGO admins)
   uid: string;                    // Matches Firebase Auth UID
-  email: string;                  // User email
-  displayName: string | null;     // Full name
-  phoneNumber: string | null;     // Phone with country code
-  photoURL: string | null;        // Profile picture URL
+  email: string;                  // NGO email
+  displayName: string;            // NGO representative name
+  phoneNumber: string;            // Phone with country code
   
-  // Account Status
-  role: 'user' | 'ngo' | 'admin'; // Role for authorization
-  accountStatus: 'active' | 'suspended' | 'deleted';
+  // Account Type (only 'ngo' or 'admin' - no regular users)
+  role: 'ngo' | 'admin';          // Role for authorization
+  accountStatus: 'active' | 'suspended' | 'pending_verification';
   emailVerified: boolean;
-  phoneVerified: boolean;
   
-  // User Preferences
-  favorites: string[];            // Array of organization IDs
-  notificationSettings: {
-    email: boolean;
-    push: boolean;
-  };
+  // NGO Specific Fields
+  organizationId: string;         // Reference to their organization document
+  designation: string;            // "Director", "Manager", etc.
   
-  // Rate Limiting
-  lastSubmissionAt: Timestamp | null;
-  submissionCount: number;        // Reset monthly
-  
-  // Privacy & Consent
-  consents: {
-    terms: { accepted: boolean; timestamp: Timestamp };
-    privacy: { accepted: boolean; timestamp: Timestamp };
-  };
+  // Account Verification
+  verificationDocuments: {
+    docId: string;
+    type: 'registration' | 'tax_exemption' | 'id_proof';
+    url: string;
+    uploadedAt: Timestamp;
+  }[];
+  verifiedAt: Timestamp | null;
+  verifiedBy: string | null;      // Admin UID who verified
   
   // Metadata
   createdAt: Timestamp;
@@ -295,14 +288,17 @@ nearbycare (root)
   lastLoginAt: Timestamp;
   
   // Schema Management
-  schemaVersion: number;          // For data migrations
+  schemaVersion: number;
 }
 ```
+
+**Important:** This collection only contains NGO administrators and platform admins. 
+Regular visitors don't need accounts and won't have entries here.
 
 **Indexes Required:**
 - `email` (ascending)
 - `role + accountStatus` (composite)
-- `createdAt` (descending)
+- `organizationId` (ascending)
 
 #### 6.2 organizations Collection
 
@@ -462,7 +458,9 @@ nearbycare (root)
   }[];
   
   // Submission Context
-  submittedBy: string;            // User UID
+  submittedBy: string | null;     // User UID (only if NGO submitted) or null for anonymous
+  submitterEmail: string;         // Email for update notifications (required)
+  submitterName: string | null;   // Optional name
   submitterNotes: string | null;  // Why this org matters
   relationshipToOrg: 'volunteer' | 'beneficiary' | 'employee' | 'other' | null;
   
@@ -493,6 +491,14 @@ nearbycare (root)
 - `submittedBy + status` (composite)
 - `reviewedBy` (ascending)
 - `createdAt` (descending)
+
+- **Anonymous Submission Flow:**
+1. Visitor fills submission form (no login required)
+2. Provides email for updates (required)
+3. Optionally provides name
+4. System creates submission with `submittedBy: null`
+5. Email sent: "We received your submission, we'll notify you at this email"
+6. Admin approves → Email sent: "Your submission is now live!"
 
 #### 6.4 reviews Collection
 
@@ -658,18 +664,28 @@ service cloud.firestore {
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.emailVerified == true;
     }
     
-    // Users Collection
+  // Users Collection (only NGO admins and platform admins)
     match /users/{userId} {
-      allow create: if isOwner(userId) && 
-                      request.resource.data.role == 'user' &&
-                      request.resource.data.uid == userId;
+      // NGO can create account during registration (pending verification)
+      allow create: if isAuthenticated() && 
+                      request.auth.uid == userId &&
+                      request.resource.data.role == 'ngo' &&
+                      request.resource.data.accountStatus == 'pending_verification';
       
-      allow read, update: if isOwner(userId);
+      // NGO can read their own profile
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Admins can read all users
       allow read: if isAdmin();
       
-      allow update: if isAdmin() && 
+      // NGO can update limited fields (contact info, designation)
+      allow update: if isAuthenticated() && 
+                      request.auth.uid == userId &&
                       request.resource.data.diff(resource.data).affectedKeys()
-                        .hasOnly(['role', 'accountStatus', 'updatedAt']);
+                        .hasOnly(['phoneNumber', 'designation', 'updatedAt']);
+      
+      // Admins can verify NGO accounts and update status
+      allow update: if isAdmin();
     }
     
     // Organizations Collection
@@ -697,17 +713,24 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
     
-    // Submissions Collection
+   // Submissions Collection (anonymous submissions allowed)
     match /submissions/{submissionId} {
-      allow create: if isVerified() && 
-                      request.resource.data.submittedBy == request.auth.uid &&
-                      request.resource.data.status == 'pending';
+      // ANYONE can create submissions (no auth required)
+      allow create: if request.resource.data.status == 'pending' &&
+                      request.resource.data.submitterEmail is string &&
+                      request.resource.data.submitterEmail.matches('.+@.+[.].+'); // Valid email
       
+      // Admins can read all submissions
+      allow read: if isAdmin();
+      
+      // NGO can read submissions they created (if authenticated)
       allow read: if isAuthenticated() && 
                     resource.data.submittedBy == request.auth.uid;
       
-      allow read: if isAdmin();
+      // Only admins can update submissions (for review process)
       allow update: if isAdmin();
+      
+      // Admins can delete submissions
       allow delete: if isAdmin();
     }
     
@@ -942,10 +965,404 @@ Users can discover NGOs using an interactive India map with visual markers and f
 │  - Write a review (if authenticated)     │
 └──────────────────────────────────────────┘
 ```
+### 8.3 Anonymous Submission Portal
+
+**Submission Flow (No Account Required):**
+```
+Step 1: Basic Information
+├─ Organization Name *
+├─ Organization Type *
+├─ Description (min 50 chars) *
+└─ Continue →
+
+Step 2: Contact Details
+├─ NGO Phone Number *
+├─ NGO Email (optional)
+├─ NGO Website (optional)
+└─ Continue →
+
+Step 3: Location
+├─ Street Address
+├─ Area/Locality *
+├─ City *
+├─ State *
+├─ Pincode *
+├─ [Map Preview]
+└─ Continue →
+
+Step 4: Additional Info
+├─ Operating Hours (optional)
+├─ Donation Types Accepted
+├─ Why should we list this NGO? *
+├─ Your relationship to organization
+└─ Continue →
+
+Step 5: Verification Documents
+├─ Upload Photos (optional, max 5)
+├─ Upload Registration Certificate (optional but recommended)
+├─ Upload Address Proof (optional)
+└─ Continue →
+
+Step 6: Your Contact Info (for updates only)
+├─ Your Email * (we'll notify you about submission status)
+├─ Your Name (optional)
+├─ [✓] I agree to Terms of Service
+└─ Submit Anonymously
+
+Step 7: Confirmation
+├─ ✅ Submission Received!
+├─ We'll review within 48 hours
+├─ Check your email for updates
+└─ [Browse More NGOs]
+```
+
+**Validation Rules:**
+
+**Client-Side (Instant Feedback):**
+- Required fields presence
+- Format validation (phone, email, pincode)
+- Character limits
+- File size and type checks
+- Valid email format for submitter
+
+**Server-Side (Security):**
+- Duplicate detection (name + pincode)
+- Rate limiting (3 submissions per email per day)
+- Content moderation (profanity check)
+- Document validity
+- Geolocation verification
+
+**Post-Submission:**
+```
+Anonymous user submits → Email confirmation sent to submitter
+                              ↓
+                       Admin receives notification
+                              ↓
+                       Admin reviews (within 48 hours)
+                              ↓
+              ┌───────────────┴───────────────┐
+              ↓                               ↓
+          APPROVED                        REJECTED
+              ↓                               ↓
+    Organization created              Submitter notified
+              ↓                        with reason via email
+    Submitter notified via email            ↓
+    "Your submission is live!"        Can resubmit
+              ↓                        with corrections
+    Organization appears on map
+```
+
+**Email Notifications:**
+
+1. **Submission Received:**
+```
+Subject: We received your NGO submission
+
+Hi [Name],
+
+Thank you for submitting [NGO Name] to NearbyCare!
+
+We've received your submission and our team will review it within 
+48 hours. You'll receive an email once we've made a decision.
+
+Submission Details:
+- Organization: [NGO Name]
+- Location: [City, State]
+- Submitted: [Date & Time]
+
+Thank you for helping us build a better community!
+
+- NearbyCare Team
+```
+
+2. **Submission Approved:**
+```
+Subject: Your submission is now live! 🎉
+
+Hi [Name],
+
+Great news! [NGO Name] has been approved and is now live on NearbyCare.
+
+View the listing: [Link to organization page]
+
+If you represent this organization, you can claim it to manage the 
+profile and keep information updated.
+
+[Claim This Organization]
+
+Thank you for contributing to our community!
+
+- NearbyCare Team
+```
+
+3. **Submission Rejected:**
+```
+Subject: Update on your NGO submission
+
+Hi [Name],
+
+Thank you for submitting [NGO Name]. After review, we couldn't 
+approve this submission for the following reason:
+
+[Rejection Reason]
+
+You can submit again with the required corrections:
+[Submit Again]
+
+If you have questions, reply to this email.
+
+- NearbyCare Team
+```
+
+### 8.4 NGO Self-Registration & Profile Management
+
+**Registration Flow (Account Creation for NGOs Only):**
+```
+Step 1: Account Creation
+├─ Work Email * (organization email)
+├─ Password *
+├─ Confirm Password *
+├─ Representative Name *
+├─ Designation * (Director, Manager, etc.)
+├─ Phone Number *
+└─ Sign Up →
+
+Step 2: Email Verification
+├─ Check your work email
+├─ Click verification link
+└─ Email verified ✓
+
+Step 3: Organization Search
+├─ Search for your organization
+├─ Found? → Claim it
+├─ Not found? → Create new listing
+└─ Continue →
+
+Step 4: Organization Verification Documents
+├─ Registration Certificate * (PDF)
+├─ Tax Exemption Certificate (80G/12A) (optional)
+├─ Your ID Proof * (Aadhaar/PAN/Passport)
+├─ Authorization Letter * (if not primary contact)
+└─ Submit for Verification
+
+Step 5: Under Review
+├─ Your account is under verification
+├─ We'll review within 3-5 business days
+├─ You'll receive email notification
+└─ Meanwhile, you can browse the platform
+
+Step 6: Approved! ✅
+├─ Email: "Your account is verified"
+├─ Login to access dashboard
+└─ Start managing your profile
+```
+
+**Verification Process:**
+
+**Admin Review Checklist:**
+- ☐ Registration certificate is valid and clear
+- ☐ Organization name matches official documents
+- ☐ Representative's ID proof is legitimate
+- ☐ Phone number is working (test call)
+- ☐ No duplicate NGO accounts
+- ☐ Organization exists on government databases (if available)
+- ☐ Social media/website verification (if provided)
+
+**Approval Outcomes:**
+```
+APPROVED:
+- Custom claim set: role = 'ngo'
+- organizationId linked to account
+- Dashboard access granted
+- Welcome email sent with next steps
+
+REJECTED:
+- User notified with specific reasons
+- Can resubmit with corrections
+- Documents retained for 30 days
+
+NEEDS MORE INFO:
+- Admin requests additional documents
+- User notified with requirements
+- Can upload additional documents
+```
+
+**NGO Dashboard Features (Post-Approval):**
+
+**Dashboard Sections:**
+
+1. **Profile Management**
+   - Edit organization details
+   - Update photos
+   - Manage wishlist
+   - Update operating hours
+   - Update contact information
+
+2. **Engagement Analytics**
+   - Profile views (daily/monthly)
+   - Map marker clicks
+   - Review ratings
+   - Donation inquiries
+
+3. **Reviews Management**
+   - View all reviews
+   - Respond to reviews
+   - Flag inappropriate reviews
+
+4. **Donation Management**
+   - Update wishlist items
+   - Mark items as fulfilled
+   - Add donation instructions
+
+5. **Settings**
+   - Contact information
+   - Password change
+   - Account verification status
+   - Email notifications preferences
+
+
+### 8.5 Share & Bookmark (No Account Needed)
+
+**Functionality:**
+
+**Share Organization:**
+- Share via WhatsApp, Facebook, Twitter, Email
+- Copy link to clipboard
+- Generate QR code for offline sharing
+
+**Browser Bookmarking:**
+- Users can bookmark using browser favorites
+- No account needed
+- Works across devices if browser synced
+
+**Implementation:**
+```typescript
+function ShareButtons({ org }) {
+  const shareUrl = `https://nearbycare.org/organizations/${org.slug}`;
+  const shareText = `Check out ${org.name} on NearbyCare`;
+  
+  return (
+    <div className="flex gap-2">
+      <button onClick={() => {
+        navigator.share({ title: org.name, url: shareUrl });
+      }}>
+        Share
+      </button>
+      
+      <button onClick={() => {
+        navigator.clipboard.writeText(shareUrl);
+        toast.success('Link copied!');
+      }}>
+        Copy Link
+      </button>
+    </div>
+  );
+}
+```
+```
 
 ---
 
+### 📍 **Location 8: Phase 1 Deliverables (Section 10)**
+
+**UPDATE** Phase 1 Authentication System bullet:
+
+**REPLACE:**
+```
+- Email/password authentication
+- Google OAuth integration
+- Email verification flow
+- Password reset flow
+```
+
+**WITH:**
+```
+- NGO account creation (email/password only)
+- Email verification flow for NGOs
+- Password reset flow for NGOs
+- No authentication required for visitors/submissions
+---
+
+// Cloud Function: Anonymous Submission
+export const submitOrganizationAnonymous = functions
+  .region('asia-south1')
+  .https.onCall(async (data, context) => {
+    
+    // NO authentication check - anyone can submit
+    
+    // 1. Validate required fields
+    const { 
+      name, 
+      type, 
+      description, 
+      contact, 
+      address, 
+      submitterEmail,
+      submitterName 
+    } = data;
+    
+    if (!submitterEmail || !submitterEmail.match(/.+@.+\..+/)) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Valid email is required for submission updates'
+      );
+    }
+    
+    // 2. Rate limiting by email (3 per day)
+    await checkRateLimit(
+      submitterEmail,
+      'submission',
+      3,
+      24 * 60 * 60
+    );
+    
+    // 3. Check for duplicates
+    const isDuplicate = await checkDuplicateSubmission(data);
+    if (isDuplicate) {
+      throw new functions.https.HttpsError(
+        'already-exists',
+        'This organization already exists or has a pending submission'
+      );
+    }
+    
+    // 4. Create submission
+    const submissionRef = db.collection('submissions').doc();
+    await submissionRef.set({
+      submissionId: submissionRef.id,
+      name,
+      type,
+      description,
+      contact,
+      address,
+      location: data.location || null,
+      documents: data.documents || [],
+      submittedBy: null, // Anonymous
+      submitterEmail,
+      submitterName: submitterName || null,
+      submitterNotes: data.submitterNotes || null,
+      relationshipToOrg: data.relationshipToOrg || null,
+      status: 'pending',
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+      schemaVersion: 1,
+    });
+    
+    // 5. Send confirmation email to submitter
+    await sendSubmissionReceivedEmail(submitterEmail, name);
+    
+    // 6. Notify admin
+    await sendAdminNotificationEmail(submissionRef.id);
+    
+    return {
+      success: true,
+      message: 'Submission received! Check your email for updates.',
+      submissionId: submissionRef.id,
+    };
+  });
+
 ## 9. Interactive India Map
+
+
 
 ### 9.1 Map Overview
 
