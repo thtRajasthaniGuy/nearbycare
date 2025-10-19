@@ -257,38 +257,25 @@ nearbycare (root)
 
 ```typescript
 {
-  // Document ID: Firebase Auth UID (only for NGO admins)
-  uid: string;                    // Matches Firebase Auth UID
-  email: string;                  // NGO email
-  displayName: string;            // NGO representative name
-  phoneNumber: string;            // Phone with country code
+  uid: string //Document ID: Auto-generated;                   s
+  userEmail: string;                
+  userName: string;          
   
   // Account Type (only 'ngo' or 'admin' - no regular users)
-  role: 'ngo' | 'admin';          // Role for authorization
-  accountStatus: 'active' | 'suspended' | 'pending_verification';
+  role: 'user';       
   emailVerified: boolean;
   
-  // NGO Specific Fields
-  organizationId: string;         // Reference to their organization document
-  designation: string;            // "Director", "Manager", etc.
-  
-  // Account Verification
-  verificationDocuments: {
-    docId: string;
-    type: 'registration' | 'tax_exemption' | 'id_proof';
-    url: string;
-    uploadedAt: Timestamp;
-  }[];
-  verifiedAt: Timestamp | null;
-  verifiedBy: string | null;      // Admin UID who verified
+  // NGO Specific Fields which they wanna refer
+  ngoName: string 
+  ngoEmail:string,
+  ngoPhoneNumber:string,
+  ngoAddress:string,
+  ngoType:string
   
   // Metadata
   createdAt: Timestamp;
   updatedAt: Timestamp;
-  lastLoginAt: Timestamp;
   
-  // Schema Management
-  schemaVersion: number;
 }
 ```
 
