@@ -1,5 +1,6 @@
 "use client";
 import { ReactNode, useEffect } from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,7 +8,7 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   actions?: ReactNode;
-  size?: "sm" | "md" | "lg" | "full"; // control modal size
+  size?: "sm" | "md" | "lg" | "full";
 }
 
 const Modal = ({
@@ -28,7 +29,6 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  // Size mapping
   const sizeClasses: Record<string, string> = {
     sm: "max-w-sm",
     md: "max-w-md",
@@ -38,29 +38,40 @@ const Modal = ({
 
   const modalClass =
     size === "full"
-      ? "bg-white dark:bg-gray-800 w-full h-full p-6 overflow-auto"
-      : `bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full p-6 ${sizeClasses[size]}`;
-
+      ? "bg-white w-full h-full p-6 overflow-auto"
+      : `bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] w-full p-6 ${sizeClasses[size]} max-h-[90vh] overflow-y-auto`;
   return (
     <>
-      {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+        className="fixed inset-0 bg-[rgba(255,255,255,0.3)] backdrop-blur-md z-40 transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
         <div
-          className={`${modalClass} transform transition-all duration-300 scale-95 opacity-0 animate-modalIn`}
+          className={`${modalClass} transform transition-all duration-300 scale-95 opacity-0 animate-modalIn relative`}
           onClick={(e) => e.stopPropagation()}
         >
-          {title && <h2 className="text-xl font-semibold mb-4">{title}</h2>}
+          <button
+            onClick={onClose}
+            aria-label="Close modal"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition flex items-center justify-center"
+          >
+            <X size={22} className="text-[var(--text-dark)]" />
+          </button>
 
-          <div className="mb-4">{children}</div>
+          {title && (
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-dark)] mb-6">
+              {title}
+            </h2>
+          )}
+
+          <div className="space-y-4">{children}</div>
 
           {actions && (
-            <div className="flex justify-end gap-2 flex-wrap">{actions}</div>
+            <div className="flex justify-end gap-3 mt-6 flex-wrap">
+              {actions}
+            </div>
           )}
         </div>
       </div>
@@ -77,7 +88,7 @@ const Modal = ({
           }
         }
         .animate-modalIn {
-          animation: modalIn 0.2s ease-out forwards;
+          animation: modalIn 0.25s ease-out forwards;
         }
       `}</style>
     </>
