@@ -36,3 +36,26 @@ export const ORGANIZATION_TYPES: { value: OrganizationType; label: string }[] =
     { value: "healthcare", label: "Healthcare Facility" },
     { value: "other", label: "Other" },
   ];
+
+export interface NgoSubmission {
+  id: string;
+  name: string;
+  type: string;
+  email: string;
+  phone: string;
+  alternatePhone?: string;
+  description?: string;
+  tagline?: string;
+  street?: string;
+  area?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  country?: string;
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
+  status: "pending_verification" | "active" | "suspended";
+  createdAt?: any;
+  [key: string]: any;
+}
