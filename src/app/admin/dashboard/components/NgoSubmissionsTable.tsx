@@ -203,7 +203,7 @@ export default function NgoSubmissionsTable() {
                     <td className="px-6 py-4">
                       <p className="text-sm text-gray-900">
                         {ngo?.address?.city && ngo?.address?.state
-                          ? `${ngo?.address?.area},${ngo?.address?.street},${ngo?.address?.city}, ${ngo?.address?.state},${ngo?.address?.pincode}`
+                          ? `${ngo?.address?.street},${ngo?.address?.area},${ngo?.address?.city}, ${ngo?.address?.state},${ngo?.address?.pincode}`
                           : "N/A"}
                       </p>
                     </td>

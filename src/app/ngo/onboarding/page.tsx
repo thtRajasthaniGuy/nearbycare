@@ -16,6 +16,7 @@ import StepThree from "../components/StepThree";
 import FormNavigation from "../components/FormNavigation";
 import PendingVerification from "../components/PendingVerification";
 import toast from "react-hot-toast";
+import { geocodeAddress } from "@/lib/getLocation";
 
 const TOTAL_STEPS = 3;
 
@@ -70,6 +71,10 @@ export default function NgoOnboardingPage() {
       state: "",
       pincode: "",
       country: "India",
+      latitude: 0,
+      longitude: 0,
+      place_id: "",
+      formatted_address: "",
     },
     validationSchema: ngoValidationSchema,
     onSubmit: async (values) => {
@@ -130,7 +135,29 @@ export default function NgoOnboardingPage() {
   const handleSubmit = async () => {
     const isValid = await validateStep(2);
     if (isValid) {
-      formik.handleSubmit();
+      const address = `${formik.values.street}, ${formik.values.area}, ${formik.values.city}, ${formik.values.state}, ${formik.values.pincode}, ${formik.values.country}`;
+
+      try {
+        const geoData = await geocodeAddress(address);
+        console.log("geoData", geoData);
+        if (geoData) {
+          formik.setFieldValue("latitude", geoData.lat);
+          formik.setFieldValue("longitude", geoData.lng);
+          formik.setFieldValue("place_id", geoData.place_id);
+          formik.setFieldValue("formatted_address", geoData.formatted_address);
+
+          setTimeout(() => {
+            formik.handleSubmit();
+          }, 100);
+        } else {
+          toast.error(
+            "Could not verify address location. Please check your address."
+          );
+        }
+      } catch (error) {
+        console.error("Geocoding error:", error);
+        toast.error("Failed to verify address. Please try again.");
+      }
     }
   };
 

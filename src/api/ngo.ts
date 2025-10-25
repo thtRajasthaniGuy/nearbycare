@@ -26,6 +26,10 @@ export interface NgoFormData {
   state: string;
   pincode: string;
   country: string;
+  latitude: Number;
+  longitude: Number;
+  place_id: string;
+  formatted_address: string;
 }
 
 // Create slug from organization name
@@ -91,9 +95,11 @@ export const createOrganization = async (
         country: formData.country,
       },
       location: {
-        latitude: 0,
-        longitude: 0,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
         geohash: "",
+        place_id: formData.place_id,
+        formatted_address: formData.formatted_address,
       },
 
       // Operational Details
@@ -110,7 +116,7 @@ export const createOrganization = async (
       logo: userPhotoURL || null,
 
       // Verification & Trust
-      verified: false,
+
       verificationBadge: null,
       verificationDocuments: [],
       lastVerifiedAt: null,

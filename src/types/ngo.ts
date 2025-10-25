@@ -15,6 +15,10 @@ export interface NgoFormValues {
   state: string;
   pincode: string;
   country: string;
+  latitude: Number;
+  longitude: Number;
+  place_id: string;
+  formatted_address: string;
 }
 
 export type OrganizationType =

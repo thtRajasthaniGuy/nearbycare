@@ -4,6 +4,10 @@ import NavBar from "@/components/NavBar";
 import AboutSection from "@/components/about/AboutSection";
 import { useState } from "react";
 import SubmissionModal from "@/app/user/submission-modal";
+import SearchNGOSection from "./components/SearchNGOSection";
+import WhySection from "./components/WhySection";
+import FAQSection from "./components/FAQSection";
+import Footer from "./components/Footer";
 
 export default function LandingPage() {
   const [showSuggestNgoModal, setShowSuggestNgoModal] = useState(false);
@@ -13,6 +17,10 @@ export default function LandingPage() {
 
       <main className="pt-5">
         <AboutSection />
+        <SearchNGOSection />
+        <WhySection />
+        <FAQSection />
+        <Footer />
       </main>
 
       {showSuggestNgoModal && (

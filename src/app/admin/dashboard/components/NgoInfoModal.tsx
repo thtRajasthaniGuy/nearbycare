@@ -134,12 +134,16 @@ export const NgoInfoModal = ({
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <InfoItem label="Organization Type" value={ngo.type} icon="📋" />
-              <InfoItem label="Email" value={ngo.email} icon="✉️" />
-              <InfoItem label="Primary Phone" value={ngo.phone} icon="📞" />
-              {ngo.alternatePhone && (
+              <InfoItem label="Email" value={ngo?.contact?.email} icon="✉️" />
+              <InfoItem
+                label="Primary Phone"
+                value={ngo?.contact?.phone}
+                icon="📞"
+              />
+              {ngo?.contact?.alternatePhone && (
                 <InfoItem
                   label="Alternate Phone"
-                  value={ngo.alternatePhone}
+                  value={ngo?.contact?.alternatePhone}
                   icon="📱"
                 />
               )}
@@ -162,7 +166,11 @@ export const NgoInfoModal = ({
           )}
 
           {/* Address */}
-          {(ngo.street || ngo.area || ngo.city || ngo.state || ngo.pincode) && (
+          {(ngo?.address?.street ||
+            ngo?.address?.area ||
+            ngo?.address?.city ||
+            ngo?.address?.state ||
+            ngo?.address?.pincode) && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
                 <span className="text-2xl">📍</span>
@@ -171,12 +179,12 @@ export const NgoInfoModal = ({
               <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-100">
                 <p className="text-sm font-medium text-[var(--text-dark)]">
                   {[
-                    ngo.street,
-                    ngo.area,
-                    ngo.city,
-                    ngo.state,
-                    ngo.pincode,
-                    ngo.country,
+                    ngo?.address?.street,
+                    ngo?.address?.area,
+                    ngo?.address?.city,
+                    ngo?.address?.state,
+                    ngo?.address?.pincode,
+                    ngo?.address?.country,
                   ]
                     .filter(Boolean)
                     .join(", ")}
