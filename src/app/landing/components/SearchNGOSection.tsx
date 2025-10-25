@@ -16,7 +16,9 @@ export default function SearchNGOSection({
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      router.push(`/ngos?location=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(
+        `/searchngo?location=${encodeURIComponent(searchQuery.trim())}`
+      );
     }
   };
 
@@ -28,7 +30,7 @@ export default function SearchNGOSection({
 
   const selectCity = (city: string) => {
     setSearchQuery(city);
-    router.push(`/ngos?location=${encodeURIComponent(city)}`);
+    router.push(`/searchngo?location=${encodeURIComponent(city)}`);
   };
 
   return (
@@ -60,7 +62,7 @@ export default function SearchNGOSection({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Enter your city or area (e.g., Jaipur, Mumbai)"
+                  placeholder="Enter your city (e.g., Jaipur, Mumbai)"
                   className="flex-1 text-base md:text-lg outline-none text-[var(--text-dark)] placeholder:text-gray-400"
                 />
 
@@ -76,7 +78,7 @@ export default function SearchNGOSection({
           </div>
         </div>
 
-        {/* <div className="mt-8 text-center">
+        <div className="mt-8 text-center">
           <p className="text-sm text-gray-500 mb-3">Popular locations:</p>
           <div className="flex flex-wrap justify-center gap-2">
             {["Mumbai", "Delhi", "Bangalore", "Jaipur", "Pune", "Chennai"].map(
@@ -91,7 +93,7 @@ export default function SearchNGOSection({
               )
             )}
           </div>
-        </div> */}
+        </div>
 
         {/* <div className="grid grid-cols-3 gap-4 md:gap-8 mt-16 max-w-3xl mx-auto">
           <div className="text-center">
