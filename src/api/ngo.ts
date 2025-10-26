@@ -7,8 +7,12 @@ import {
   updateDoc,
   serverTimestamp,
   Timestamp,
+  where,
+  query,
+  getDocs,
 } from "firebase/firestore";
 
+const orgRefName = collection(db, "organizations");
 export interface NgoFormData {
   name: string;
   type: string;
@@ -32,7 +36,6 @@ export interface NgoFormData {
   formatted_address: string;
 }
 
-// Create slug from organization name
 const createSlug = (name: string): string => {
   return name
     .toLowerCase()
@@ -40,7 +43,6 @@ const createSlug = (name: string): string => {
     .replace(/^-|-$/g, "");
 };
 
-// Generate searchable keywords
 const generateKeywords = (data: NgoFormData): string[] => {
   return [
     data.name.toLowerCase(),
@@ -51,7 +53,6 @@ const generateKeywords = (data: NgoFormData): string[] => {
   ].filter(Boolean);
 };
 
-// Create new organization
 export const createOrganization = async (
   userId: string,
   formData: NgoFormData,
@@ -87,12 +88,12 @@ export const createOrganization = async (
 
       // Location
       address: {
-        street: formData.street.trim(),
-        area: formData.area.trim(),
-        city: formData.city.trim(),
-        state: formData.state.trim(),
+        street: formData.street.trim().toLowerCase(),
+        area: formData.area.trim().toLowerCase(),
+        city: formData.city.trim().toLowerCase(),
+        state: formData.state.trim().toLowerCase(),
         pincode: formData.pincode,
-        country: formData.country,
+        country: formData.country.toLowerCase(),
       },
       location: {
         latitude: formData.latitude,
@@ -160,10 +161,9 @@ export const createOrganization = async (
   }
 };
 
-// Get organization by user ID
 export const getOrganization = async (userId: string) => {
   try {
-    const orgRef = doc(db, "organizations", userId);
+    const orgRef = doc(orgRefName, userId);
     const orgDoc = await getDoc(orgRef);
 
     if (orgDoc.exists()) {
@@ -179,7 +179,6 @@ export const getOrganization = async (userId: string) => {
   }
 };
 
-// Update organization
 export const updateOrganization = async (
   userId: string,
   data: Partial<NgoFormData>
@@ -197,7 +196,6 @@ export const updateOrganization = async (
   }
 };
 
-// Check if organization exists
 export const checkOrganizationExists = async (userId: string) => {
   try {
     const orgRef = doc(db, "organizations", userId);
@@ -206,5 +204,23 @@ export const checkOrganizationExists = async (userId: string) => {
   } catch (error) {
     console.error("Error checking organization:", error);
     throw error;
+  }
+};
+
+export const getOrganizationByCityName = async (cityName: string) => {
+  try {
+    const q = query(
+      orgRefName,
+      where("address.city", "==", cityName.toLowerCase())
+    );
+    const getOrgs = await getDocs(q);
+    const orgs: any[] = [];
+    getOrgs.forEach((doc) => {
+      orgs.push({ id: doc.id, ...doc.data() });
+    });
+    return orgs;
+  } catch (error) {
+    console.error("Error fetching organizations by city:", error);
+    return [];
   }
 };
