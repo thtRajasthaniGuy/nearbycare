@@ -2,10 +2,6 @@ import axios from "axios";
 
 const OLA_MAPS_API_KEY = process.env.NEXT_PUBLIC_OLAMAPS_KEY;
 
-/**
- * Geocode address using Ola Maps API
- * Returns lat/lng coordinates and formatted address
- */
 export async function geocodeAddress(address: string): Promise<{
   lat: number;
   lng: number;
@@ -51,9 +47,6 @@ export async function geocodeAddress(address: string): Promise<{
   }
 }
 
-/**
- * Reverse geocode: Get address from lat/lng coordinates
- */
 export async function reverseGeocode(
   lat: number,
   lng: number
@@ -94,9 +87,63 @@ export async function reverseGeocode(
   }
 }
 
-/**
- * Validate coordinates
- */
+export function calculateBoundingBox(
+  lat: number,
+  lng: number,
+  radiusKm: number
+): {
+  northeast: { lat: number; lng: number };
+  southwest: { lat: number; lng: number };
+  center: { lat: number; lng: number };
+  radius: number;
+} {
+  const R = 6371;
+
+  const angularDistance = radiusKm / R;
+
+  const latRad = toRad(lat);
+
+  const latDelta = angularDistance * (180 / Math.PI);
+  const maxLat = lat + latDelta;
+  const minLat = lat - latDelta;
+
+  const lngDelta = (angularDistance * (180 / Math.PI)) / Math.cos(latRad);
+  const maxLng = lng + lngDelta;
+  const minLng = lng - lngDelta;
+
+  return {
+    northeast: {
+      lat: maxLat,
+      lng: maxLng,
+    },
+    southwest: {
+      lat: minLat,
+      lng: minLng,
+    },
+    center: {
+      lat,
+      lng,
+    },
+    radius: radiusKm,
+  };
+}
+
+export function isPointInBoundingBox(
+  pointLat: number,
+  pointLng: number,
+  boundingBox: {
+    northeast: { lat: number; lng: number };
+    southwest: { lat: number; lng: number };
+  }
+): boolean {
+  return (
+    pointLat >= boundingBox.southwest.lat &&
+    pointLat <= boundingBox.northeast.lat &&
+    pointLng >= boundingBox.southwest.lng &&
+    pointLng <= boundingBox.northeast.lng
+  );
+}
+
 export function isValidCoordinates(lat: number, lng: number): boolean {
   return (
     lat >= -90 &&
@@ -108,17 +155,13 @@ export function isValidCoordinates(lat: number, lng: number): boolean {
   );
 }
 
-/**
- * Calculate distance between two coordinates (in kilometers)
- * Uses Haversine formula
- */
 export function calculateDistance(
   lat1: number,
   lng1: number,
   lat2: number,
   lng2: number
 ): number {
-  const R = 6371; // Earth's radius in kilometers
+  const R = 6371;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
 
@@ -133,9 +176,6 @@ export function calculateDistance(
   return R * c;
 }
 
-/**
- * Format distance for display
- */
 export function formatDistance(distanceInKm: number): string {
   if (distanceInKm < 1) {
     return `${Math.round(distanceInKm * 1000)} m`;
@@ -143,7 +183,6 @@ export function formatDistance(distanceInKm: number): string {
   return `${distanceInKm.toFixed(1)} km`;
 }
 
-// Helper functions
 function toRad(degrees: number): number {
   return degrees * (Math.PI / 180);
 }

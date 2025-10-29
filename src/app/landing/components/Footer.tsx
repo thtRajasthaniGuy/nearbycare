@@ -46,7 +46,7 @@ export default function Footer({ className = "" }: FooterProps) {
               <div className="w-10 h-10 bg-[var(--primary-color)] rounded-lg flex items-center justify-center">
                 <Heart size={24} fill="white" color="white" />
               </div>
-              <span className="text-2xl font-bold">NearbyCare</span>
+              <span className="text-2xl font-bold">KarunaHub</span>
             </div>
             <p className="text-white/80 leading-relaxed mb-6 max-w-md">
               Connecting communities with verified NGOs to create lasting social
@@ -60,7 +60,7 @@ export default function Footer({ className = "" }: FooterProps) {
               </div>
               <div className="flex items-center gap-3 text-white/80">
                 <Mail size={18} className="flex-shrink-0" />
-                <span className="text-sm">contact@nearbycare.org</span>
+                <span className="text-sm">contact@KarunaHub.org</span>
               </div>
               <div className="flex items-center gap-3 text-white/80">
                 <Phone size={18} className="flex-shrink-0" />
@@ -105,7 +105,7 @@ export default function Footer({ className = "" }: FooterProps) {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm text-center md:text-left">
-              © {currentYear} NearbyCare. All rights reserved. Made with{" "}
+              © {currentYear} KarunaHub. All rights reserved. Made with{" "}
               <Heart
                 size={14}
                 className="inline text-[var(--primary-color)] fill-current"

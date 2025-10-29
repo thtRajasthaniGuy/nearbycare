@@ -47,7 +47,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-[var(--text-dark)]">
-                  NearbyCare Admin
+                  KarunaHub Admin
                 </h1>
                 <p className="text-xs text-gray-500">Submission Management</p>
               </div>
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-600">
-              © 2025 NearbyCare. All rights reserved.
+              © 2025 KarunaHub. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <a

@@ -57,7 +57,7 @@ const SubmissionForm: React.FC<SubmissionFormProps> = ({ onSuccess }) => {
           Recommend an NGO
         </h3>
         <p className="text-sm text-gray-600">
-          Help NearbyCare grow its verified network — recommend an organization
+          Help KarunaHub grow its verified network — recommend an organization
           you trust.
         </p>
       </header>

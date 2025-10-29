@@ -1,4 +1,4 @@
-nearbycareApp/
+KarunaHubApp/
 ├── app/
 │ ├── layout.tsx # Root layout (Server Component)
 │ ├── page.tsx # Home page (Server)

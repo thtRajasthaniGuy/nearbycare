@@ -73,10 +73,10 @@ export default function WhySection({ className = "" }: WhySectionProps) {
             Our Mission
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-[var(--text-dark)]">
-            Why NearbyCare Exists
+            Why KarunaHub Exists
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            I created NearbyCare because finding trustworthy NGOs to support
+            I created KarunaHub because finding trustworthy NGOs to support
             shouldn't be hard. Every community has incredible organizations
             doing amazing work, but they're often invisible to the people who
             want to help.

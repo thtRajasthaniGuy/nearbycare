@@ -17,14 +17,14 @@ export default function FAQSection({ className = "" }: FAQSectionProps) {
 
   const faqs: FAQItem[] = [
     {
-      question: "How do you verify NGOs on NearbyCare?",
+      question: "How do you verify NGOs on KarunaHub?",
       answer:
         "We have a thorough verification process that includes checking registration documents, validating physical addresses, verifying contact information, and reviewing their track record. Only NGOs that pass all checks receive the verified badge.",
     },
     {
-      question: "Is NearbyCare free to use?",
+      question: "Is KarunaHub free to use?",
       answer:
-        "Yes! NearbyCare is completely free for everyone. Users can search for NGOs, submit recommendations, and connect with organizations at no cost. We believe in making social good accessible to all.",
+        "Yes! KarunaHub is completely free for everyone. Users can search for NGOs, submit recommendations, and connect with organizations at no cost. We believe in making social good accessible to all.",
     },
     {
       question: "Can I suggest an NGO that's not listed?",
@@ -32,7 +32,7 @@ export default function FAQSection({ className = "" }: FAQSectionProps) {
         "Absolutely! We encourage you to submit NGOs you know and trust. Click the 'Suggest NGO' button, fill out the form with their details, and our team will review and verify the organization.",
     },
     {
-      question: "How can NGOs get listed on NearbyCare?",
+      question: "How can NGOs get listed on KarunaHub?",
       answer:
         "NGOs can be added in two ways: through user submissions or by contacting us directly. Once submitted, our verification team reviews the organization and adds them to the platform after successful verification.",
     },
@@ -58,7 +58,7 @@ export default function FAQSection({ className = "" }: FAQSectionProps) {
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Find answers to common questions about NearbyCare and how we connect
+            Find answers to common questions about KarunaHub and how we connect
             communities with NGOs
           </p>
         </div>

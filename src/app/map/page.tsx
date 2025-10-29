@@ -6,7 +6,8 @@ import { MapStyleSelector } from "./components/MapStyleSelector";
 import { MapControls } from "./components/MapControls";
 import { SearchBar } from "./components/SearchBar";
 import { NGOInfoCard } from "./components/NGOInfoCard";
-
+import { useDebounce } from "@/hooks/useDebounce";
+import { smartSearchOrganizations } from "@/api/map";
 const MOCK_NGOS = [
   {
     id: "1",
@@ -93,6 +94,15 @@ export default function MapView() {
     "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
   );
 
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchType, setSearchType] = useState<"city_state" | "address">(
+    "city_state"
+  );
+  const [radius, setRadius] = useState(5);
+
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
   useEffect(() => {
     if (map.current) return;
 
@@ -133,14 +143,59 @@ export default function MapView() {
   }, [mapStyle]);
 
   useEffect(() => {
-    const filtered = MOCK_NGOS.filter(
-      (ngo) =>
-        ngo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        ngo.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredNGOs(filtered);
-    if (map.current?.isStyleLoaded()) renderMarkers(filtered);
-  }, [searchQuery]);
+    if (debouncedSearch.trim()) {
+      performSearch(debouncedSearch);
+    } else {
+      setSearchResults([]);
+      setFilteredNGOs(MOCK_NGOS);
+      if (map.current?.isStyleLoaded()) renderMarkers(MOCK_NGOS);
+    }
+  }, [debouncedSearch, radius]);
+
+  const performSearch = async (query: string) => {
+    setIsSearching(true);
+    try {
+      const result = await smartSearchOrganizations(query, radius);
+      setSearchResults(result.organizations);
+      setSearchType(result.type);
+
+      const ngoData = result.organizations.map((org: any) => ({
+        id: org.id,
+        name: org.name || "Unnamed Organization",
+        category: org.category || "General",
+        latitude: org.location?.latitude,
+        longitude: org.location?.longitude,
+        description: org.description || "",
+        volunteers: org.volunteers || 0,
+      }));
+
+      setFilteredNGOs(ngoData);
+
+      if (map.current?.isStyleLoaded()) {
+        renderMarkers(ngoData);
+
+        if (result.type === "address" && result.searchLocation) {
+          map.current?.flyTo({
+            center: [result.searchLocation.lng, result.searchLocation.lat],
+            zoom: 13,
+            duration: 1500,
+          });
+        } else if (ngoData.length > 0) {
+          const bounds = new maplibregl.LngLatBounds();
+          ngoData.forEach((ngo: any) => {
+            bounds.extend([ngo.longitude, ngo.latitude]);
+          });
+          map.current?.fitBounds(bounds, { padding: 50, duration: 1500 });
+        }
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      setSearchResults([]);
+      setFilteredNGOs([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const renderMarkers = (ngos: typeof MOCK_NGOS) => {
     if (!map.current || !map.current.isStyleLoaded()) return;
@@ -297,7 +352,16 @@ export default function MapView() {
       <SearchBar
         value={searchQuery}
         onChange={setSearchQuery}
-        onClear={() => setSearchQuery("")}
+        onClear={() => {
+          setSearchQuery("");
+          setSearchResults([]);
+          setFilteredNGOs(MOCK_NGOS);
+        }}
+        isLoading={isSearching}
+        searchType={searchType}
+        radius={radius}
+        onRadiusChange={setRadius}
+        resultsCount={searchResults.length}
       />
       <MapStyleSelector currentStyle={mapStyle} onStyleChange={setMapStyle} />
       <MapControls

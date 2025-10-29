@@ -9,7 +9,7 @@ export default function NavBar({ onSubmitClick }: any) {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const navLinks: any = [{ href: "/", label: "Find NGOs Near You" }];
+  const navLinks: any = [{ href: "/map", label: "Find NGOs Near You" }];
 
   return (
     <nav className="bg-[var(--background)] shadow-md fixed top-0 left-0 right-0 z-50">
@@ -25,7 +25,7 @@ export default function NavBar({ onSubmitClick }: any) {
             backgroundClip: "text",
           }}
         >
-          NearbyCare
+          KarunaHub
         </Link>
 
         <div className="hidden md:flex items-center space-x-8">

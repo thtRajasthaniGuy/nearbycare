@@ -37,7 +37,7 @@ export default function AboutHero() {
 
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             Every community has unsung heroes working to create positive change.
-            NearbyCare helps you discover verified NGOs making real impact near
+            KarunaHub helps you discover verified NGOs making real impact near
             you, so you can contribute to causes that matter.
           </p>
         </motion.div>

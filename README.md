@@ -1,4 +1,4 @@
-# NearbyCare – Production-Ready Architecture Documentation
+# KarunaHub – Production-Ready Architecture Documentation
 
 **Local NGO & Donation Finder Platform**
 
@@ -30,7 +30,7 @@
 
 ## 1. Project Overview
 
-NearbyCare is a **100% free**, community-driven, location-based web platform designed to help users discover, engage with, and support local NGOs, orphanages, and senior centers. The platform enables users to find organizations nearby on an interactive India map, submit listings for lesser-known initiatives, and facilitate transparent support.
+KarunaHub is a **100% free**, community-driven, location-based web platform designed to help users discover, engage with, and support local NGOs, orphanages, and senior centers. The platform enables users to find organizations nearby on an interactive India map, submit listings for lesser-known initiatives, and facilitate transparent support.
 
 ### Key Highlights
 
@@ -113,7 +113,7 @@ NearbyCare is a **100% free**, community-driven, location-based web platform des
 
 ### Architecture Overview
 
-NearbyCare follows a pure serverless architecture using Firebase, eliminating traditional backend servers while maintaining enterprise-grade security and scalability.
+KarunaHub follows a pure serverless architecture using Firebase, eliminating traditional backend servers while maintaining enterprise-grade security and scalability.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -248,7 +248,7 @@ User Action → Frontend Validation → Cloud Function (Server-side)
 ### Firestore Database Structure
 
 ```
-nearbycare (root)
+KarunaHub (root)
 ├── users/
 ├── organizations/
 ├── submissions/
@@ -1071,7 +1071,7 @@ Subject: We received your NGO submission
 
 Hi [Name],
 
-Thank you for submitting [NGO Name] to NearbyCare!
+Thank you for submitting [NGO Name] to KarunaHub!
 
 We've received your submission and our team will review it within
 48 hours. You'll receive an email once we've made a decision.
@@ -1083,7 +1083,7 @@ Submission Details:
 
 Thank you for helping us build a better community!
 
-- NearbyCare Team
+- KarunaHub Team
 ```
 
 2. **Submission Approved:**
@@ -1093,7 +1093,7 @@ Subject: Your submission is now live! 🎉
 
 Hi [Name],
 
-Great news! [NGO Name] has been approved and is now live on NearbyCare.
+Great news! [NGO Name] has been approved and is now live on KarunaHub.
 
 View the listing: [Link to organization page]
 
@@ -1104,7 +1104,7 @@ profile and keep information updated.
 
 Thank you for contributing to our community!
 
-- NearbyCare Team
+- KarunaHub Team
 ```
 
 3. **Submission Rejected:**
@@ -1124,7 +1124,7 @@ You can submit again with the required corrections:
 
 If you have questions, reply to this email.
 
-- NearbyCare Team
+- KarunaHub Team
 ```
 
 ### 8.4 NGO Self-Registration & Profile Management
@@ -1260,8 +1260,8 @@ NEEDS MORE INFO:
 
 ```typescript
 function ShareButtons({ org }) {
-  const shareUrl = `https://nearbycare.org/organizations/${org.slug}`;
-  const shareText = `Check out ${org.name} on NearbyCare`;
+  const shareUrl = `https://KarunaHub.org/organizations/${org.slug}`;
+  const shareText = `Check out ${org.name} on KarunaHub`;
 
   return (
     <div className="flex gap-2">
@@ -1397,7 +1397,7 @@ export const submitOrganizationAnonymous = functions
 
 ### 9.1 Map Overview
 
-The **Interactive India Map** is the centerpiece of NearbyCare, providing a visual, Snapchat-style interface where users can explore NGOs across India.
+The **Interactive India Map** is the centerpiece of KarunaHub, providing a visual, Snapchat-style interface where users can explore NGOs across India.
 
 **Key Features:**
 
@@ -2510,7 +2510,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Interactive Map", () => {
   test("user can explore NGOs on map", async ({ page }) => {
-    await page.goto("https://nearbycare.org/map");
+    await page.goto("https://KarunaHub.org/map");
 
     // Wait for map to load
     await page.waitForSelector(".gm-style");
@@ -2533,7 +2533,7 @@ test.describe("Interactive Map", () => {
   });
 
   test("user can filter map by type", async ({ page }) => {
-    await page.goto("https://nearbycare.org/map");
+    await page.goto("https://KarunaHub.org/map");
 
     // Open filter panel
     await page.click('[data-testid="filter-button"]');
@@ -2582,7 +2582,7 @@ export let options = {
 
 export default function () {
   // Test map API endpoint
-  const mapRes = http.get("https://nearbycare.org/api/organizations", {
+  const mapRes = http.get("https://KarunaHub.org/api/organizations", {
     params: {
       bounds: "20,70,30,80",
     },
@@ -2615,14 +2615,14 @@ export default function () {
 
 2. **Staging**
 
-   - Firebase project: nearbycare-staging
-   - Domain: staging.nearbycare.org
+   - Firebase project: KarunaHub-staging
+   - Domain: staging.KarunaHub.org
    - Real Firebase services
    - .env.staging
 
 3. **Production**
-   - Firebase project: nearbycare-prod
-   - Domain: nearbycare.org
+   - Firebase project: KarunaHub-prod
+   - Domain: KarunaHub.org
    - Real Firebase services
    - .env.production
 
@@ -2672,7 +2672,7 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          projectId: nearbycare-prod
+          projectId: KarunaHub-prod
           channelId: live
 ```
 
