@@ -8,71 +8,7 @@ import { SearchBar } from "./components/SearchBar";
 import { NGOInfoCard } from "./components/NGOInfoCard";
 import { useDebounce } from "@/hooks/useDebounce";
 import { smartSearchOrganizations } from "@/api/map";
-const MOCK_NGOS = [
-  {
-    id: "1",
-    name: "Smile Foundation",
-    category: "Education",
-    latitude: 26.9124,
-    longitude: 75.7873,
-    description: "Empowering underprivileged children through education",
-    volunteers: 245,
-  },
-  {
-    id: "2",
-    name: "Goonj",
-    category: "Community Development",
-    latitude: 26.92,
-    longitude: 75.79,
-    description: "Bridging the gap between urban surplus and rural needs",
-    volunteers: 180,
-  },
-  {
-    id: "3",
-    name: "Akshaya Patra",
-    category: "Food & Nutrition",
-    latitude: 26.905,
-    longitude: 75.795,
-    description: "Feeding millions of school children across India",
-    volunteers: 320,
-  },
-  {
-    id: "4",
-    name: "Teach For India",
-    category: "Education",
-    latitude: 26.918,
-    longitude: 75.775,
-    description: "Building leadership for educational equity",
-    volunteers: 156,
-  },
-  {
-    id: "5",
-    name: "CRY - Child Rights",
-    category: "Child Welfare",
-    latitude: 26.91,
-    longitude: 75.8,
-    description: "Ensuring a happy childhood for every child",
-    volunteers: 198,
-  },
-  {
-    id: "6",
-    name: "Helpage India",
-    category: "Elder Care",
-    latitude: 26.925,
-    longitude: 75.78,
-    description: "Supporting elderly citizens with care and dignity",
-    volunteers: 167,
-  },
-  {
-    id: "7",
-    name: "Magic Bus",
-    category: "Youth Development",
-    latitude: 26.9,
-    longitude: 75.792,
-    description: "Empowering children and youth through sports",
-    volunteers: 203,
-  },
-];
+import { useInitialNGOs } from "@/hooks/useInitialNGOs";
 
 const CATEGORY_COLORS: any = {
   "Health & Welfare": "#ef4444",
@@ -89,7 +25,9 @@ export default function MapView() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNGO, setSelectedNGO] = useState<any>(null);
-  const [filteredNGOs, setFilteredNGOs] = useState(MOCK_NGOS);
+  const { data: initialNGOs, isLoading: isLoadingInitialNGOs } =
+    useInitialNGOs();
+  const [filteredNGOs, setFilteredNGOs] = useState<any[]>([]);
   const [mapStyle, setMapStyle] = useState(
     "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
   );
@@ -102,6 +40,31 @@ export default function MapView() {
   const [radius, setRadius] = useState(5);
 
   const debouncedSearch = useDebounce(searchQuery, 500);
+  useEffect(() => {
+    if (initialNGOs && initialNGOs.length > 0 && !searchQuery) {
+      setFilteredNGOs(initialNGOs);
+      if (map.current?.isStyleLoaded()) {
+        renderMarkers(initialNGOs);
+      }
+    }
+  }, [initialNGOs]);
+  useEffect(() => {
+    if (map.current) return;
+
+    map.current = new maplibregl.Map({
+      container: mapContainer.current!,
+      style: mapStyle,
+      center: [78.9629, 20.5937],
+      zoom: 5,
+      minZoom: 4,
+      maxZoom: 18,
+    });
+
+    return () => {
+      map.current?.remove();
+      map.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (map.current) return;
@@ -116,41 +79,28 @@ export default function MapView() {
     });
 
     map.current.on("load", () => {
-      renderMarkers(MOCK_NGOS);
+      if (initialNGOs && initialNGOs.length > 0) {
+        renderMarkers(initialNGOs);
+      }
     });
 
     return () => {
       map.current?.remove();
       map.current = null;
     };
-  }, []);
-
-  useEffect(() => {
-    if (!map.current) return;
-    map.current.setStyle(mapStyle);
-
-    const handleStyleLoad = () => {
-      if (map.current?.isStyleLoaded()) {
-        renderMarkers(filteredNGOs);
-        map.current?.off("styledata", handleStyleLoad);
-      }
-    };
-
-    map.current.on("styledata", handleStyleLoad);
-    return () => {
-      map.current?.off("styledata", handleStyleLoad);
-    };
-  }, [mapStyle]);
+  }, [initialNGOs, mapStyle]);
 
   useEffect(() => {
     if (debouncedSearch.trim()) {
       performSearch(debouncedSearch);
     } else {
       setSearchResults([]);
-      setFilteredNGOs(MOCK_NGOS);
-      if (map.current?.isStyleLoaded()) renderMarkers(MOCK_NGOS);
+      setFilteredNGOs(initialNGOs || []);
+      if (map.current?.isStyleLoaded()) {
+        renderMarkers(initialNGOs || []);
+      }
     }
-  }, [debouncedSearch, radius]);
+  }, [debouncedSearch, radius, initialNGOs]);
 
   const performSearch = async (query: string) => {
     setIsSearching(true);
@@ -197,7 +147,7 @@ export default function MapView() {
     }
   };
 
-  const renderMarkers = (ngos: typeof MOCK_NGOS) => {
+  const renderMarkers = (ngos: any[]) => {
     if (!map.current || !map.current.isStyleLoaded()) return;
 
     if (map.current.getSource("ngos")) {
@@ -207,9 +157,21 @@ export default function MapView() {
       map.current.removeSource("ngos");
     }
 
+    // Filter out invalid coordinates
+    const validNGOs = ngos.filter(
+      (ngo) =>
+        ngo.latitude &&
+        ngo.longitude &&
+        !isNaN(ngo.latitude) &&
+        !isNaN(ngo.longitude)
+    );
+
+    // Return early if no valid NGOs
+    if (validNGOs.length === 0) return;
+
     const geojson: any = {
       type: "FeatureCollection",
-      features: ngos.map((ngo) => ({
+      features: validNGOs.map((ngo) => ({
         type: "Feature",
         properties: {
           id: ngo.id,
@@ -281,7 +243,7 @@ export default function MapView() {
           CATEGORY_COLORS["Child Welfare"],
           "Water & Sanitation",
           CATEGORY_COLORS["Water & Sanitation"],
-          CATEGORY_COLORS.default, // fallback
+          CATEGORY_COLORS.default,
         ],
         "circle-radius": 10,
         "circle-stroke-width": 2,
@@ -310,7 +272,7 @@ export default function MapView() {
     map.current.on("click", "unclustered-point", (e) => {
       const feature = e.features?.[0];
       if (!feature) return;
-      const ngo = ngos.find((n) => n.id === feature.properties?.id);
+      const ngo = validNGOs.find((n) => n.id === feature.properties?.id);
       if (ngo) {
         setSelectedNGO(ngo);
         map.current?.flyTo({
@@ -355,7 +317,10 @@ export default function MapView() {
         onClear={() => {
           setSearchQuery("");
           setSearchResults([]);
-          setFilteredNGOs(MOCK_NGOS);
+          setFilteredNGOs(initialNGOs || []);
+          if (map.current?.isStyleLoaded()) {
+            renderMarkers(initialNGOs || []);
+          }
         }}
         isLoading={isSearching}
         searchType={searchType}

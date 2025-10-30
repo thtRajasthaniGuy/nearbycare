@@ -13,11 +13,6 @@ const MAP_STYLES = [
     name: "Streets",
     url: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
   },
-  {
-    id: "dark",
-    name: "Dark",
-    url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-  },
 ];
 
 interface MapStyleSelectorProps {
@@ -61,7 +56,7 @@ export const MapStyleSelector: React.FC<MapStyleSelectorProps> = ({
               }}
               className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center justify-between ${
                 currentStyle === style.url
-                  ? "bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] bg-opacity-10 text-[var(--primary-color)]"
+                  ? "bg-opacity-10 text-[var(--primary-color)]"
                   : "hover:bg-gray-50 text-gray-700"
               }`}
             >

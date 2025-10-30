@@ -56,7 +56,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <select
               value={radius}
               onChange={(e) => onRadiusChange(Number(e.target.value))}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] bg-gray-50"
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] bg-gray-50 text-[var(--text-dark)]"
             >
               <option value={2}>Within 2 km</option>
               <option value={5}>Within 5 km</option>
