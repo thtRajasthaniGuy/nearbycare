@@ -23,6 +23,8 @@ export type NGO = {
   address: any;
   contact?: any;
   slug?: string;
+  images?: [];
+  wishlist?: [];
 };
 
 const categories = [

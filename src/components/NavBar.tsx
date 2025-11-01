@@ -51,7 +51,7 @@ export default function NavBar({ onSubmitClick }: any) {
                 "linear-gradient(to right, var(--primary-color), rgba(242, 89, 18, 0.9))",
             }}
           >
-            Register Your NGO
+            Access NGO Portal
           </Link>
 
           <button

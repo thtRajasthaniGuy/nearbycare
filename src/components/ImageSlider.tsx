@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function ImageSlider({ images }: { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-
+  console.log("images", images);
   useEffect(() => {
     if (!isAutoPlaying || images.length <= 1) return;
 

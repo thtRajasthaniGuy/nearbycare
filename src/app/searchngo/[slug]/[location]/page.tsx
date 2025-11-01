@@ -19,11 +19,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOrganizationByCityName } from "@/api/ngo";
 import { NGO } from "../../components/SearchNGOContent";
 import ImageSlider from "@/components/ImageSlider";
+import NGOWishlist from "../../components/NGOWishlist";
 
 export default function NGODetailPage() {
   const params = useParams();
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
+  const [ngoImg, setNgoImg] = useState([]);
   const [ngo, setNgo] = useState<NGO | null | undefined>(undefined);
   const slug = params.slug as string;
   const location = params.location as string;
@@ -35,6 +37,14 @@ export default function NGODetailPage() {
   useEffect(() => {
     if (cachedNGO) {
       setNgo(cachedNGO);
+      console.log("cachedNGO", cachedNGO);
+      if (cachedNGO?.images) {
+        let img: any = [];
+        cachedNGO.images.forEach((item: any) => {
+          img.push(item?.url);
+        });
+        setNgoImg(img);
+      }
     }
   }, [cachedNGO, slug]);
 
@@ -81,7 +91,7 @@ export default function NGODetailPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-64 md:h-96 bg-gradient-to-br from-[var(--background-light)] to-[var(--secondary-color)]">
         <div className="absolute inset-0">
-          <ImageSlider images={[]} />
+          <ImageSlider images={ngoImg ?? []} />
         </div>
 
         <div className="absolute inset-0 bg-black/20"></div>
@@ -139,15 +149,6 @@ export default function NGODetailPage() {
               </div>
 
               <div className="grid sm:grid-cols-3 gap-4 mt-6 mb-6">
-                {/* <div className="text-center p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-[var(--primary-color)]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Award className="text-[var(--primary-color)]" size={20} />
-                  </div>
-                  <div className="text-xl font-bold text-[var(--text-dark)]">
-                    {ngo?.established}
-                  </div>
-                  <div className="text-sm text-gray-600">Established</div>
-                </div> */}
                 <div className="text-center p-4 bg-gray-50 rounded-xl">
                   <div className="w-10 h-10 bg-[var(--secondary-color)]/10 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Users
@@ -155,18 +156,12 @@ export default function NGODetailPage() {
                       size={20}
                     />
                   </div>
-                  {/* <div className="text-xl font-bold text-[var(--text-dark)]">
-                    {ngo?.beneficiaries}
-                  </div> */}
                   <div className="text-sm text-gray-600">Beneficiaries</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-xl">
                   <div className="w-10 h-10 bg-[var(--primary-color)]/10 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Heart className="text-[var(--primary-color)]" size={20} />
                   </div>
-                  {/* <div className="text-xl font-bold text-[var(--text-dark)]">
-                    {ngo?.volunteers}
-                  </div> */}
                   <div className="text-sm text-gray-600">Volunteers</div>
                 </div>
               </div>
@@ -178,45 +173,13 @@ export default function NGODetailPage() {
                 <p className="text-gray-600 leading-relaxed mb-4">
                   {ngo?.description}
                 </p>
-                {/* <p className="text-gray-600 leading-relaxed">
-                  {ngo?.longDescription}
-                </p> */}
               </div>
-
-              {/* <div className="mt-6">
-                <h3 className="text-xl font-semibold text-[var(--text-dark)] mb-3">
-                  Our Focus Areas
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {ngo?.causes.map((cause: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-4 py-2 bg-[var(--primary-color)]/10 text-[var(--primary-color)] rounded-full text-sm font-medium"
-                    >
-                      {cause}
-                    </span>
-                  ))}
-                </div>
-              </div> */}
             </div>
 
-            {/* <div className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] rounded-2xl p-6 md:p-8 text-white">
-                <h3 className="text-2xl font-bold mb-3">
-                  Make a Difference Today
-                </h3>
-                <p className="text-white/90 mb-6">
-                  Your support can transform lives. Join us in creating positive
-                  change.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button className="flex-1 bg-white text-[var(--primary-color)] hover:bg-gray-50 py-3 px-6 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
-                    Donate Now
-                  </button>
-                  <button className="flex-1 bg-transparent border-2 border-white text-white hover:bg-white/10 py-3 px-6 rounded-xl font-semibold transition-all duration-300">
-                    Volunteer
-                  </button>
-                </div>
-              </div> */}
+            {/* Add Wishlist Component Here */}
+            {ngo?.wishlist && ngo.wishlist.length > 0 && (
+              <NGOWishlist wishlist={ngo.wishlist} />
+            )}
           </div>
 
           <div className="space-y-6">
@@ -239,19 +202,6 @@ export default function NGODetailPage() {
                   </div>
                 </div>
 
-                {/* <div className="flex items-center gap-3">
-                  <Clock
-                    className="text-[var(--primary-color)] flex-shrink-0"
-                    size={20}
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 mb-1">
-                      Working Hours
-                    </p>
-                    <p className="text-sm text-gray-600">{ngo?.workingHours}</p>
-                  </div>
-                </div> */}
-
                 <div className="pt-4 border-t space-y-3">
                   <a
                     href={`tel:${ngo?.phone}`}
@@ -272,33 +222,9 @@ export default function NGODetailPage() {
                       {ngo?.contact?.email}
                     </span>
                   </a>
-
-                  {/* <a
-                    href={`https://${ngo?.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-3 px-4 py-3 bg-gray-50 hover:bg-[var(--primary-color)] hover:text-white rounded-xl transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Globe size={18} className="flex-shrink-0" />
-                      <span className="text-sm font-medium">
-                        {ngo?.website}
-                      </span>
-                    </div>
-                    <ExternalLink size={16} className="flex-shrink-0" />
-                  </a> */}
                 </div>
               </div>
             </div>
-
-            {/* <div className="bg-white rounded-2xl shadow-lg p-4">
-              <div className="aspect-square bg-gray-100 rounded-xl flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin size={40} className="mx-auto mb-2" />
-                  <p className="text-sm">Map view coming soon</p>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
