@@ -2273,14 +2273,6 @@ function useResponsiveMap() {
   - Map performance under load
   - CDN cache verification
 
-- ✅ **Legal Compliance**
-
-  - Privacy Policy final review
-  - Terms of Service final review
-  - Cookie consent verification
-  - GDPR compliance checklist
-  - Data export functionality test
-  - Account deletion flow test
 
 - ✅ **Launch Checklist**
   - ☐ All environment variables set in production
@@ -2293,7 +2285,6 @@ function useResponsiveMap() {
   - ☐ Support email configured
   - ☐ Documentation complete
   - ☐ Launch announcement ready
-  - ☐ Google Maps API production key configured
 
 **Go/No-Go Decision Criteria:**
 
@@ -2331,32 +2322,16 @@ function useResponsiveMap() {
 - ✅ **Immediate Monitoring**
 
   - 24/7 error monitoring
-  - Map performance tracking
   - User behavior analysis
   - Server costs tracking
-
-- ✅ **Rapid Response**
-
-  - Fix critical bugs within 4 hours
-  - Daily bug triage meetings
-  - User support response < 24 hours
 
 - ✅ **Data Collection**
   - User demographics
   - Popular search queries
   - Most viewed organizations
-  - Map interaction heatmap
   - Submission quality metrics
 
 **Month 1-3:**
-
-- ✅ **Feature Enhancements**
-
-  - Advanced map filters
-  - Save favorite locations
-  - User profile customization
-  - Review helpfulness voting
-  - Map style customization
 
 - ✅ **Content Expansion**
 
@@ -2371,21 +2346,7 @@ function useResponsiveMap() {
   - Volunteer spotlights
   - Social media presence
 
-**Month 4-6:**
 
-- ✅ **Advanced Features**
-
-  - Volunteer opportunity listings
-  - Event management (donation drives)
-  - Email notifications for favorites
-  - Multi-language support (Hindi)
-  - Dark mode for map
-
-- ✅ **Map Enhancements**
-  - Heatmap view (density of NGOs)
-  - Custom map styles
-  - Directions integration
-  - Nearby amenities (transit, parking)
 
 ---
 
@@ -2812,7 +2773,6 @@ Total: ~₹59,500/month
 
 - Use appropriate memory allocation
 - Batch operations where possible
-- Regional deployment (asia-south1)
 - **Estimated savings: 20-30%**
 
 **Storage Optimization:**
@@ -2822,26 +2782,6 @@ Total: ~₹59,500/month
 - Delete orphaned files
 - **Estimated savings: 60-70%**
 
-### 13.3 Budget Alerts
-
-**Alert Configuration:**
-
-```javascript
-Alerts:
-1. Daily Budget Alert
-   ├─ Threshold: ₹1,000/day
-   └─ Action: Email to admin
-
-2. Monthly Budget Alerts
-   ├─ 50% of budget: ₹25,000 → Email
-   ├─ 80% of budget: ₹40,000 → Email + Review
-   └─ 100% of budget: ₹50,000 → Alert + Throttle
-
-3. Service-Specific Alerts
-   ├─ Google Maps API > $150/month → Email
-   ├─ Firestore reads > 5M/day → Email
-   └─ Unusual spike (3x average) → Immediate email
-```
 
 ---
 
@@ -2865,184 +2805,27 @@ Alerts:
    - Legal compliance
 
 3. **Data Sharing**
-
-   - We DO NOT sell personal data
    - Third-party services:
      - Firebase (Google) - Hosting & database
-     - SendGrid - Email delivery
-     - Google Maps - Location services
-     - Sentry - Error tracking
-
-4. **User Rights (GDPR & Indian IT Act)**
-
-   - Access your data
-   - Correct inaccurate data
-   - Delete your data
-   - Export your data
-   - Withdraw consent
-
-5. **Data Security**
-
-   - Encryption (in transit & at rest)
-   - Access controls
-   - Regular security audits
-
-6. **International Data Transfers**
-
-   - Data stored in India (asia-south1)
-   - Adequate protection measures
-
-7. **Contact Information**
-   - Privacy concerns contact
-   - Physical address
-
-### 14.2 Terms of Service
-
-**Key Sections:**
-
-1. **Acceptance of Terms**
-2. **User Accounts** (18+, security, prohibited activities)
-3. **User Content** (ownership, license, prohibited content)
-4. **Organization Listings** (verification, accuracy, liability)
-5. **Intellectual Property**
-6. **Disclaimers** ("As-is" service, no warranty)
-7. **Limitation of Liability**
-8. **Dispute Resolution** (Indian law, Jaipur courts)
-9. **Termination**
-10. **Contact & Grievances**
-
-### 14.3 Indian IT Act Compliance
-
-**Key Requirements:**
-
-1. **Reasonable Security Practices (Section 43A)**
-
-   - ✓ Implement encryption
-   - ✓ Regular security audits
-   - ✓ Access controls
-   - ✓ Incident response plan
-
-2. **Privacy Policy (Rule 4)**
-
-   - ✓ Clear and accessible
-   - ✓ Users must consent
-
-3. **Grievance Officer (Rule 3)**
-
-   - ✓ Appoint grievance officer
-   - ✓ Publish contact details
-   - ✓ Acknowledge complaints within 24 hours
-   - ✓ Resolve within 30 days
-
-4. **Data Localization**
-   - ✓ Store user data in India (asia-south1)
-
----
-
-## 15. Learning Objectives
-
-### 15.1 Technical Skills
-
-**By completing this project, you will master:**
-
-**Frontend Development:**
-
-- ✓ Next.js 14+ (App Router, SSR, SSG)
-- ✓ React Advanced Patterns
-- ✓ State Management (React Query)
-- ✓ Form Handling (React Hook Form + Zod)
-- ✓ **Google Maps Integration**
-- ✓ **Geospatial UI Development**
-- ✓ Responsive Design
-- ✓ Accessibility (a11y)
-
-**Backend Development (Serverless):**
-
-- ✓ Firebase Ecosystem
-- ✓ Cloud Functions
-- ✓ NoSQL Database Design
-- ✓ **Geospatial Queries**
-- ✓ Security Rules
-- ✓ Rate Limiting
-
-**DevOps & Infrastructure:**
-
-- ✓ CI/CD Pipelines
-- ✓ Monitoring & Observability
-- ✓ Backup & Recovery
-- ✓ Cost Management
-
-**API Integration:**
-
-- ✓ **Google Maps API (Geocoding, Map rendering)**
-- ✓ SendGrid (Email)
-- ✓ Sentry (Error tracking)
-
-### 15.2 Software Engineering Practices
-
-**Principles & Patterns Learned:**
-
-- ✓ Serverless architecture
-- ✓ Security best practices
-- ✓ Testing strategies
-- ✓ Clean code principles
-- ✓ Project management
-
-### 15.3 Portfolio & Career Benefits
-
-**What This Project Demonstrates:**
-
-- ✓ Full-stack development capability
-- ✓ Cloud/serverless architecture expertise
-- ✓ **Geospatial/mapping expertise**
-- ✓ Production-ready code quality
-- ✓ Real-world problem solving
-- ✓ Social impact orientation
-
-**Resume Highlights:**
-
-- "Built scalable serverless platform with interactive India map serving X users"
-- "Implemented geospatial search with custom clustering and filtering"
-- "Designed NoSQL database schema for location-based queries"
-- "Optimized map performance achieving < 3s initial load"
+     - Krutrim - geocoding api
+     - imagekit - store image
 
 ---
 
 ## 16. Next Steps & Future Enhancements
 
-### 16.1 Phase 6: Advanced Features (Post-Launch)
+### 16.1 Phase 2:  Features (Post-Launch)
 
-**Priority 1: Enhanced Map Features**
 
-- Heatmap view (NGO density visualization)
-- Custom map styles/themes
-- Offline map support (PWA)
-- Street view integration
-- Satellite view toggle
+1 -> Volunteer Sign-Up & Management:
+Allow users to register for volunteering opportunities at nearby NGOs, and let organizations post their volunteer needs with roles and timing info.
 
-**Priority 2: Volunteer Management**
+2 -> NGO Event Calendar & Alerts:
+NGOs can post upcoming events (camps, drives, awareness sessions), and users can RSVP, get reminders, or share events. This helps increase real-world engagement without handling funds.
 
-- Volunteer opportunity listings
-- Application system
-- Skill-based matching
-- Hour tracking
-- Certificates generation
+3 -> Impact Stories & Updates:
+Let NGOs post impact updates, success stories, images, or progress reports, which users can follow, like, and share to spread awareness.
 
-**Priority 3: Event Management**
-
-- Donation drives on map
-- Fundraising campaigns
-- Event calendar
-- RSVP system
-- Live event tracking
-
-**Priority 4: Advanced Search**
-
-- Algolia integration for instant search
-- Typo-tolerance
-- Faceted search
-- Search analytics
-- Personalized results
 
 ### 16.2 Partnership Opportunities
 
@@ -3095,24 +2878,7 @@ Alerts:
 
 ## 17. Appendix
 
-### 17.1 Glossary
-
-- **API**: Application Programming Interface
-- **CDN**: Content Delivery Network
-- **CI/CD**: Continuous Integration/Continuous Deployment
-- **CSR**: Corporate Social Responsibility
-- **GDPR**: General Data Protection Regulation
-- **Geohash**: Geocoding system that divides map into grid
-- **JWT**: JSON Web Token
-- **MVP**: Minimum Viable Product
-- **NGO**: Non-Governmental Organization
-- **NoSQL**: Not Only SQL (database type)
-- **PWA**: Progressive Web App
-- **RBAC**: Role-Based Access Control
-- **SEO**: Search Engine Optimization
-- **SSR**: Server-Side Rendering
-
-### 17.2 Useful Resources
+### 17.1 Useful Resources
 
 **Firebase Documentation:**
 
@@ -3138,7 +2904,7 @@ Alerts:
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 - [Playwright Docs](https://playwright.dev/)
 
-### 17.4 License
+### 17.2 License
 
 ```
 MIT License
@@ -3165,7 +2931,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-### 17.5 Acknowledgments
+### 17.3 Acknowledgments
 
 This project was inspired by:
 
@@ -3180,7 +2946,7 @@ This project was inspired by:
 
 ### Key Features:
 
-✅ **Interactive India Map** - Snapchat-style visual exploration of NGOs  
+✅ **Interactive India Map** - visual exploration of NGOs  
 ✅ **Custom Markers** - Color-coded by organization type  
 ✅ **Smart Clustering** - Groups nearby markers for better UX  
 ✅ **Real-Time Filtering** - Instant map updates  
