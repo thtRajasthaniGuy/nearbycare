@@ -7,11 +7,15 @@ import { useRouter } from "next/navigation";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useQuery } from "@tanstack/react-query";
 import WishlistSection from "../components/WishlistSection";
-import { Package, LogOut, Loader2 } from "lucide-react";
+import ImageUploadSection from "../components/ImageUploadSection";
+import { Package, LogOut, Loader2, Image, List } from "lucide-react";
+
+type TabType = "wishlist" | "images";
 
 export default function NgoDashboardPage() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [orgId, setOrgId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>("wishlist");
   const router = useRouter();
   const user = auth.currentUser;
 
@@ -53,16 +57,23 @@ export default function NgoDashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
+      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)] rounded-lg">
                 <Package className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-[var(--text-dark)]">
-                NGO Portal
-              </h2>
+              <div>
+                <h2 className="text-xl font-bold text-[var(--text-dark)]">
+                  NGO Portal
+                </h2>
+                {organization?.name && (
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {organization.name}
+                  </p>
+                )}
+              </div>
             </div>
             <button
               onClick={handleLogout}
@@ -102,10 +113,9 @@ export default function NgoDashboardPage() {
                 Welcome back{user?.displayName ? `, ${user.displayName}` : ""}!
                 🎉
               </h1>
-              {/* <p className="text-gray-600 mt-1">
-                {organization?.name ||
-                  "Your account has been verified and is active"}
-              </p> */}
+              <p className="text-gray-600 mt-1">
+                Manage your organization's needs and showcase your work
+              </p>
             </div>
           </div>
 
@@ -127,7 +137,7 @@ export default function NgoDashboardPage() {
           </div>
         </div>
 
-        {/* Wishlist Section */}
+        {/* Loading State */}
         {isLoadingOrg ? (
           <div className="flex items-center justify-center py-16">
             <div className="text-center">
@@ -135,9 +145,8 @@ export default function NgoDashboardPage() {
               <p className="text-gray-600">Loading your organization...</p>
             </div>
           </div>
-        ) : orgId ? (
-          <WishlistSection orgId={orgId} />
-        ) : (
+        ) : !orgId ? (
+          /* No Organization State */
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
             <div className="flex items-start gap-3">
               <svg
@@ -164,6 +173,45 @@ export default function NgoDashboardPage() {
               </div>
             </div>
           </div>
+        ) : (
+          /* Tabs & Content */
+          <>
+            {/* Tab Navigation */}
+            <div className="bg-white rounded-xl shadow-sm p-2 mb-8">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setActiveTab("wishlist")}
+                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                    activeTab === "wishlist"
+                      ? "bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] text-white shadow-lg"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <List className="w-5 h-5" />
+                  <span className="hidden sm:inline">Needs & Wishlist</span>
+                  <span className="sm:hidden">Wishlist</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("images")}
+                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                    activeTab === "images"
+                      ? "bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] text-white shadow-lg"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  <Image className="w-5 h-5" />
+                  <span className="hidden sm:inline">Organization Photos</span>
+                  <span className="sm:hidden">Photos</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="transition-all duration-300">
+              {activeTab === "wishlist" && <WishlistSection orgId={orgId} />}
+              {activeTab === "images" && <ImageUploadSection orgId={orgId} />}
+            </div>
+          </>
         )}
       </main>
     </div>

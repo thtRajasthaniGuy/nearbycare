@@ -492,6 +492,18 @@
     protobufjs "^7.2.5"
     yargs "^17.7.2"
 
+"@imagekit/javascript@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@imagekit/javascript/-/javascript-5.1.0.tgz#3027f3e3a838d883107161d6434fb8f45df39dd9"
+  integrity sha512-P12NaxlO6Qu4GROFagX9qgP5kKde236mCu5jJB1cWJ6mPaVdjyk0Mw3ciGIWdKXST/jP1cFqS2ZoBVRSq1SWow==
+
+"@imagekit/next@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@imagekit/next/-/next-2.1.3.tgz#09aa173fe4a380d9231ef5d80520c53ce74f9caf"
+  integrity sha512-fN3X3NjhSBYh1tlV0itkV+F6EBAVaYqy/BTrDOMWRkSyryBhSzGh6RtJJHXy/X9cdyjpWDGTPy4Jxa/Bu+VSHw==
+  dependencies:
+    "@imagekit/javascript" "^5.1.0"
+
 "@img/colour@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@img/colour/-/colour-1.0.0.tgz#d2fabb223455a793bf3bf9c70de3d28526aa8311"
@@ -1114,6 +1126,11 @@ csstype@^3.0.2, csstype@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
+
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
 
 deepmerge@^2.1.1:
   version "2.2.1"
