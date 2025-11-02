@@ -16,52 +16,34 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getOrganizationByCityName } from "@/api/ngo";
-import { NGO } from "../../components/SearchNGOContent";
+import { getOrganizationByCityName, getOrganizationBySlug } from "@/api/ngo";
+import { NGO } from "../../searchngo/components/SearchNGOContent";
 import ImageSlider from "@/components/ImageSlider";
-import NGOWishlist from "../../components/NGOWishlist";
-
-export default function NGODetailPage() {
-  const params = useParams();
+import NGOWishlist from "../../searchngo/components/NGOWishlist";
+interface NGODetailPageProps {
+  slug: string;
+}
+export default function NGODetailPage({ slug }: NGODetailPageProps) {
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [ngoImg, setNgoImg] = useState([]);
-  const [ngo, setNgo] = useState<NGO | null | undefined>(undefined);
-  const slug = params.slug as string;
-  const location = params.location as string;
-  const queryClient = useQueryClient();
+  const [ngoImg, setNgoImg] = useState<string[]>([]);
 
-  const cachedNGOs = queryClient.getQueryData<NGO[]>(["ngos", location]) || [];
-  const cachedNGO = cachedNGOs.find((ngo) => ngo.slug === slug);
-
-  useEffect(() => {
-    if (cachedNGO) {
-      setNgo(cachedNGO);
-      console.log("cachedNGO", cachedNGO);
-      if (cachedNGO?.images) {
-        let img: any = [];
-        cachedNGO.images.forEach((item: any) => {
-          img.push(item?.url);
-        });
-        setNgoImg(img);
-      }
-    }
-  }, [cachedNGO, slug]);
-
-  const { isLoading } = useQuery({
-    queryKey: ["ngo-detail", slug, location],
-    queryFn: async () => {
-      const locationParam = "lastLocation";
-      const ngos = await getOrganizationByCityName(locationParam);
-      const found = ngos.find((n) => n.slug === slug);
-      setNgo(found || null);
-      return found;
-    },
-    enabled: !cachedNGO,
+  const {
+    data: ngo,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["ngo-detail", slug],
+    queryFn: () => getOrganizationBySlug(slug), // fetch directly from Firebase
     staleTime: 1000 * 60 * 5,
   });
 
-  if (ngo === undefined && isLoading) {
+  useEffect(() => {
+    if (ngo?.images?.length) {
+      setNgoImg(ngo.images.map((item: any) => item.url));
+    }
+  }, [ngo]);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>Loading...</p>
@@ -69,7 +51,7 @@ export default function NGODetailPage() {
     );
   }
 
-  if (ngo === null) {
+  if (!ngo) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -77,10 +59,10 @@ export default function NGODetailPage() {
             NGO Not Found
           </h2>
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/map")}
             className="text-[var(--primary-color)] hover:underline"
           >
-            Go back home
+            Go back to Map
           </button>
         </div>
       </div>

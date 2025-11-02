@@ -1,3 +1,4 @@
+import { NGO } from "@/app/searchngo/components/SearchNGOContent";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -10,6 +11,7 @@ import {
   where,
   query,
   getDocs,
+  limit,
 } from "firebase/firestore";
 
 const orgRefName = collection(db, "organizations");
@@ -224,3 +226,31 @@ export const getOrganizationByCityName = async (cityName: string) => {
     return [];
   }
 };
+
+export async function getOrganizationBySlug(slug: string): Promise<NGO | null> {
+  try {
+    const q = query(
+      collection(db, "organizations"),
+      where("slug", "==", slug),
+      limit(1)
+    );
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      // fallback if you want to support id-based lookup
+      const q2 = query(
+        collection(db, "organizations"),
+        where("id", "==", slug),
+        limit(1)
+      );
+      const snapshot2 = await getDocs(q2);
+      if (snapshot2.empty) return null;
+      return snapshot2.docs[0].data() as NGO;
+    }
+
+    return snapshot.docs[0].data() as NGO;
+  } catch (err) {
+    console.error("Error fetching NGO by slug:", err);
+    return null;
+  }
+}

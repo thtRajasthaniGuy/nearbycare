@@ -48,23 +48,6 @@ export default function MapView() {
       }
     }
   }, [initialNGOs]);
-  useEffect(() => {
-    if (map.current) return;
-
-    map.current = new maplibregl.Map({
-      container: mapContainer.current!,
-      style: mapStyle,
-      center: [78.9629, 20.5937],
-      zoom: 5,
-      minZoom: 4,
-      maxZoom: 18,
-    });
-
-    return () => {
-      map.current?.remove();
-      map.current = null;
-    };
-  }, []);
 
   useEffect(() => {
     if (map.current) return;
@@ -166,7 +149,6 @@ export default function MapView() {
         !isNaN(ngo.longitude)
     );
 
-    // Return early if no valid NGOs
     if (validNGOs.length === 0) return;
 
     const geojson: any = {
@@ -179,6 +161,7 @@ export default function MapView() {
           category: ngo.category,
           description: ngo.description,
           volunteers: ngo.volunteers,
+          type: ngo.type,
         },
         geometry: { type: "Point", coordinates: [ngo.longitude, ngo.latitude] },
       })),
@@ -274,7 +257,7 @@ export default function MapView() {
       if (!feature) return;
       const ngo = validNGOs.find((n) => n.id === feature.properties?.id);
       if (ngo) {
-        setSelectedNGO(ngo);
+        setSelectedNGO({ ...ngo, slug: ngo.slug || ngo.id });
         map.current?.flyTo({
           center: [ngo.longitude, ngo.latitude],
           zoom: 12,

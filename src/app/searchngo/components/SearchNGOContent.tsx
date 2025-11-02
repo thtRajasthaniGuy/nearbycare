@@ -123,7 +123,7 @@ export default function SearchNGOContent({ initialLocation = "" }: Props) {
         </div>
       </div>
 
-      <div className="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-10">
+      {/* <div className="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 overflow-x-auto">
@@ -151,7 +151,7 @@ export default function SearchNGOContent({ initialLocation = "" }: Props) {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         {filteredNGOs.length === 0 ? (

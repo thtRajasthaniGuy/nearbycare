@@ -53,7 +53,6 @@ export default function NgoGuard({ children }: NgoGuardProps) {
     try {
       const orgRef = doc(db, "organizations", user.uid);
       const orgDoc = await getDoc(orgRef);
-      console.log("orgDoc", orgDoc);
       if (!orgDoc.exists()) {
         setStatus("new");
         if (pathname !== "/ngo/onboarding") {

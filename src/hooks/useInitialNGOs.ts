@@ -18,8 +18,11 @@ export function useInitialNGOs() {
             const data = doc.data();
             return {
               id: doc.id,
+              slug: data.slug || doc.id,
               name: data.name || "Unnamed Organization",
               category: data.category || "General",
+              type: data.type || "NGO",
+              city: data.address?.city,
               latitude: data.location?.latitude,
               longitude: data.location?.longitude,
               description: data.description || "",
