@@ -36,6 +36,7 @@ export default function NgoDashboardPage() {
     },
     enabled: !!user?.uid,
   });
+  const organizationData: any = organization;
 
   useEffect(() => {
     if (organization?.id) {
@@ -68,9 +69,9 @@ export default function NgoDashboardPage() {
                 <h2 className="text-xl font-bold text-[var(--text-dark)]">
                   NGO Portal
                 </h2>
-                {organization?.name && (
+                {organizationData?.name && (
                   <p className="text-xs text-gray-600 mt-0.5">
-                    {organization.name}
+                    {organizationData.name}
                   </p>
                 )}
               </div>
