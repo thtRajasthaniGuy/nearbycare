@@ -6,29 +6,31 @@ import { Toaster } from "react-hot-toast";
 import { db } from "@/lib/firebase";
 
 // Add Rozanova font
-const rozanova = localFont({
+const satoshi = localFont({
   src: [
     {
-      path: "../../public/fonts/RozanovaGEO-Demo-Thin.otf",
+      path: "../../public/fonts/Satoshi-Regular.otf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/RozanovaGEO-Demo-SemiBold.otf",
-      weight: "400",
-      style: "italic",
+      path: "../../public/fonts/Satoshi-Medium.otf",
+      weight: "500", // Medium is usually 500
+      style: "normal",
     },
     {
-      path: "../../public/fonts/RozanovaHUM-Demo-Thin.otf",
+      path: "../../public/fonts/Satoshi-Bold.otf",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../../public/fonts/RozanovaHUM-Demo-Thin.otf",
-      weight: "700",
-      style: "italic",
+      path: "../../public/fonts/Satoshi-Black.otf",
+      weight: "900", // Black is usually 900
+      style: "normal",
     },
   ],
+  variable: "--font-satoshi", // Better name since it's Satoshi, not Rozanova
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -47,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${rozanova.className} antialiased`}>
+      <body className={`${satoshi.className} antialiased`}>
         <Providers>
           {children}
           <Toaster position="top-right" reverseOrder={false} />

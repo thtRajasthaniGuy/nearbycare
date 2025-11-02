@@ -14,7 +14,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-rozanova: var(--font-rozanova); /* Add this */
+  --font-satoshi: var(--font-satoshi); /* Changed from rozanova */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,22 +24,23 @@
   }
 }
 
-/* Use Rozanova for headings */
+/* Use Satoshi for headings */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-rozanova), Arial, Helvetica, sans-serif;
+  font-family: var(--font-satoshi), Arial, Helvetica, sans-serif;
 }
 
-/* Or create a utility class */
-.font-rozanova {
-  font-family: var(--font-rozanova), Arial, Helvetica, sans-serif;
+/* Utility class */
+.font-satoshi {
+  font-family: var(--font-satoshi), Arial, Helvetica, sans-serif;
 }
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-rozanova), Arial, Helvetica, sans-serif; /* Changed this */
+  font-family: var(--font-satoshi), Arial, Helvetica, sans-serif;
 }
