@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
-import { adminEmails } from "@/config/admins";
+import { isAdminEmail } from "@/lib/adminAuth";
 
 interface AdminGuardProps {
   children: ReactNode;
@@ -23,9 +23,15 @@ export default function AdminGuard({ children }: AdminGuardProps) {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser?.email && adminEmails.includes(firebaseUser.email)) {
-        setUser(firebaseUser);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser?.email) {
+        const isAdmin = await isAdminEmail(firebaseUser.email);
+        if (isAdmin) {
+          setUser(firebaseUser);
+        } else {
+          await auth.signOut();
+          router.replace("/admin/login?error=unauthorized");
+        }
       } else {
         router.replace("/admin/login");
       }

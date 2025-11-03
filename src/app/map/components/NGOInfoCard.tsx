@@ -48,7 +48,7 @@ export const NGOInfoCard: React.FC<NGOInfoCardProps> = ({
             .replace(/[^a-z0-9]+/g, "-") // safer: removes special chars
             .replace(/^-+|-+$/g, "") // trim extra dashes
         : ngo.id);
-
+    console.log("ngo", ngo);
     router.push(`/map/${slug}`);
   };
 

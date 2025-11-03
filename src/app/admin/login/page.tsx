@@ -7,26 +7,40 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { adminEmails } from "@/config/admins";
+import { useRouter, useSearchParams } from "next/navigation";
+import { isAdminEmail } from "@/lib/adminAuth";
 
 export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [userChecked, setUserChecked] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser?.email && adminEmails.includes(firebaseUser.email)) {
-        router.replace("/admin/dashboard");
+    // Check for unauthorized error from guard
+    if (searchParams.get("error") === "unauthorized") {
+      setError("You are not authorized to access the admin panel.");
+      setUserChecked(true);
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser?.email) {
+        const isAdmin = await isAdminEmail(firebaseUser.email);
+        if (isAdmin) {
+          router.replace("/admin/dashboard");
+        } else {
+          await auth.signOut();
+          setError("You are not authorized to access the admin panel.");
+          setUserChecked(true);
+        }
       } else {
         setUserChecked(true);
       }
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, searchParams]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -36,11 +50,17 @@ export default function AdminLoginPage() {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
 
-      if (result.user.email && adminEmails.includes(result.user.email)) {
-        router.replace("/admin/dashboard");
+      if (result.user.email) {
+        const isAdmin = await isAdminEmail(result.user.email);
+        if (isAdmin) {
+          router.replace("/admin/dashboard");
+        } else {
+          await auth.signOut();
+          setError("You are not authorized to access the admin panel.");
+        }
       } else {
         await auth.signOut();
-        setError("Access denied. Your email is not authorized as an admin.");
+        setError("Unable to retrieve email from Google account.");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to sign in.");

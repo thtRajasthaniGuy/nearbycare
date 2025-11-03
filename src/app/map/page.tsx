@@ -94,8 +94,11 @@ export default function MapView() {
 
       const ngoData = result.organizations.map((org: any) => ({
         id: org.id,
+        slug: org.slug || org.id, // Add this line
         name: org.name || "Unnamed Organization",
         category: org.category || "General",
+        type: org.type, // Add this line too if needed
+        city: org.city, // Add this line too if needed
         latitude: org.location?.latitude,
         longitude: org.location?.longitude,
         description: org.description || "",
@@ -129,7 +132,6 @@ export default function MapView() {
       setIsSearching(false);
     }
   };
-
   const renderMarkers = (ngos: any[]) => {
     if (!map.current || !map.current.isStyleLoaded()) return;
 
@@ -257,7 +259,7 @@ export default function MapView() {
       if (!feature) return;
       const ngo = validNGOs.find((n) => n.id === feature.properties?.id);
       if (ngo) {
-        setSelectedNGO({ ...ngo, slug: ngo.slug || ngo.id });
+        setSelectedNGO(ngo);
         map.current?.flyTo({
           center: [ngo.longitude, ngo.latitude],
           zoom: 12,

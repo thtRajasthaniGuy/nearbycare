@@ -25,8 +25,8 @@ export default function Footer({ className = "" }: FooterProps) {
   ];
 
   const resources = [
-    { label: "FAQ", href: "#faq" },
-    { label: "Contact", href: "#contact" },
+    //{ label: "FAQ", href: "#faq" },
+    //{ label: "Contact", href: "#contact" },
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
   ];
@@ -60,15 +60,11 @@ export default function Footer({ className = "" }: FooterProps) {
               </div>
               <div className="flex items-center gap-3 text-white/80">
                 <Mail size={18} className="flex-shrink-0" />
-                <span className="text-sm">contact@KarunaHub.org</span>
-              </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <Phone size={18} className="flex-shrink-0" />
-                <span className="text-sm">+91 (XXX) XXX-XXXX</span>
+                <span className="text-sm">karunahub@zohomail.in</span>
               </div>
             </div>
           </div>
-
+          {/* 
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3">
@@ -83,7 +79,7 @@ export default function Footer({ className = "" }: FooterProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
@@ -113,7 +109,7 @@ export default function Footer({ className = "" }: FooterProps) {
               for social good.
             </p>
 
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
@@ -127,7 +123,7 @@ export default function Footer({ className = "" }: FooterProps) {
                   </a>
                 );
               })}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

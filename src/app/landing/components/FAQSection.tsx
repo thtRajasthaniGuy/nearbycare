@@ -99,12 +99,12 @@ export default function FAQSection({ className = "" }: FAQSectionProps) {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        {/* <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">Still have questions?</p>
           <button className="px-6 py-3 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
             Contact Us
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
