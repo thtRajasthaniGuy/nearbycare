@@ -27,8 +27,8 @@ export default function Footer({ className = "" }: FooterProps) {
   const resources = [
     //{ label: "FAQ", href: "#faq" },
     //{ label: "Contact", href: "#contact" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacypolicy" },
+    { label: "Terms of Service", href: "/termsconditions" },
   ];
 
   const socialLinks = [
