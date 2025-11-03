@@ -6,28 +6,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Core Objectives](#core-objectives)
-3. [Target Users](#target-users)
-4. [System Architecture](#system-architecture)
-5. [Technology Stack](#technology-stack)
-6. [Data Model & Schema](#data-model--schema)
-7. [Security Architecture](#security-architecture)
-8. [Feature Specifications](#feature-specifications)
-9. [Interactive India Map](#interactive-india-map)
-10. [Development Roadmap](#development-roadmap)
-11. [Testing Strategy](#testing-strategy)
-12. [Deployment & Operations](#deployment--operations)
-13. [Cost Management](#cost-management)
-14. [Legal & Compliance](#legal--compliance)
-15. [Learning Objectives](#learning-objectives)
-16. [Next Steps & Future Enhancements](#next-steps--future-enhancements)
-17. [Appendix](#appendix)
-
----
-
 ## 1. Project Overview
 
 KarunaHub is a **100% free**, community-driven, location-based web platform designed to help users discover, engage with, and support local NGOs, orphanages, and senior centers. The platform enables users to find organizations nearby on an interactive India map, submit listings for lesser-known initiatives, and facilitate transparent support.
@@ -125,15 +103,12 @@ KarunaHub follows a pure serverless architecture using Firebase, eliminating tra
 ┌─────────────────────────────────────────────────────────────┐
 │                    Firebase Services                         │
 │                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Hosting    │  │     Auth     │  │   Firestore  │     │
-│  │   (CDN)      │  │  (Identity)  │  │  (Database)  │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
+│   ┌──────────────┐  ┌──────────────┐     
+│   │     Auth     │  │   Firestore  │     
+│   │  (Identity)  │  │  (Database)  │     
+│   └──────────────┘  └──────────────┘     
 │                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Storage    │  │   Functions  │  │  Scheduler   │     │
-│  │   (Files)    │  │   (Logic)    │  │   (Cron)     │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
+│  
 └───────────────────────┬─────────────────────────────────────┘
                         │
                         ↓
@@ -141,7 +116,7 @@ KarunaHub follows a pure serverless architecture using Firebase, eliminating tra
 │                   External Services                          │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   SendGrid   │  │    Sentry    │  │  Google Maps │     │
+│  │   Emailjs    │  │    Sentry    │  │  olaMaps     │
 │  │   (Email)    │  │ (Monitoring) │  │   (Map API)  │     │
 │  └──────────────┘  └──────────────┘  └──────────────┘     │
 └─────────────────────────────────────────────────────────────┘
@@ -205,17 +180,13 @@ User Action → Frontend Validation → Cloud Function (Server-side)
 | Service              | Purpose             | Usage                                 |
 | -------------------- | ------------------- | ------------------------------------- |
 | **Firestore**        | NoSQL database      | Store all application data            |
-| **Cloud Functions**  | Serverless compute  | Business logic, validation, triggers  |
 | **Firebase Auth**    | User authentication | Email/password, Google OAuth          |
-| **Firebase Storage** | File storage        | Images, documents, verification files |
-| **Cloud Scheduler**  | Cron jobs           | Automated backups, cleanup tasks      |
-| **Firebase Hosting** | Static hosting      | Host Next.js frontend with CDN        |
 
 ### External Services
 
 | Service         | Purpose                  | Free Tier         | Usage                     |
 | --------------- | ------------------------ | ----------------- | ------------------------- |
-| **SendGrid**    | Transactional email      | 100/day           | Email notifications       |
+| **Emailjs**    | Transactional email       | 100/day           | Email notifications       |
 | **Sentry**      | Error monitoring         | 5k events/month   | Production error tracking |
 | **Google Maps** | Map rendering, geocoding | $200 credit/month | Interactive India map     |
 
@@ -788,69 +759,7 @@ service cloud.firestore {
 }
 ```
 
-### 7.3 Firebase Storage Security Rules
 
-```javascript
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-
-    function isAdmin() {
-      return request.auth != null &&
-             request.auth.token.role == 'admin';
-    }
-
-    function isValidImage() {
-      return request.resource.size < 2 * 1024 * 1024 && // 2MB limit
-             request.resource.contentType.matches('image/(jpeg|png|webp)');
-    }
-
-    function isValidDocument() {
-      return request.resource.size < 5 * 1024 * 1024 && // 5MB limit
-             request.resource.contentType == 'application/pdf';
-    }
-
-    // Temporary uploads (user uploads before submission)
-    match /temp/{userId}/{fileName} {
-      allow create: if isAuthenticated() &&
-                      request.auth.uid == userId &&
-                      (isValidImage() || isValidDocument());
-
-      allow read: if isAuthenticated() && request.auth.uid == userId;
-      allow delete: if isAuthenticated() && request.auth.uid == userId;
-      allow delete: if isAdmin();
-    }
-
-    // Organization images (after approval)
-    match /organizations/{orgId}/{imageId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Organization documents (verification docs)
-    match /documents/{orgId}/{docId} {
-      allow read: if isAdmin();
-      allow create: if isAuthenticated() && isValidDocument();
-      allow delete: if isAdmin();
-    }
-
-    // User profile pictures
-    match /profiles/{userId}/{imageId} {
-      allow read: if true;
-
-      allow create: if isAuthenticated() &&
-                      request.auth.uid == userId &&
-                      isValidImage();
-
-      allow delete: if isAuthenticated() && request.auth.uid == userId;
-    }
-  }
-}
-```
 
 ---
 
@@ -1997,16 +1906,6 @@ function useResponsiveMap() {
   - Document rule logic
   - Set up automated rule testing
 
-- ✅ **Cloud Functions Foundation**
-
-  - Project structure for Cloud Functions
-  - Deploy first functions:
-    - `assignAdminRole`
-    - `submitOrganization`
-    - `approveSubmission`
-    - `rejectSubmission`
-  - Server-side validation utilities
-  - Error handling patterns
 
 - ✅ **Rate Limiting System**
 
@@ -2825,6 +2724,8 @@ NGOs can post upcoming events (camps, drives, awareness sessions), and users can
 
 3 -> Impact Stories & Updates:
 Let NGOs post impact updates, success stories, images, or progress reports, which users can follow, like, and share to spread awareness.
+
+4 -> Multi-Language Support
 
 
 ### 16.2 Partnership Opportunities
