@@ -8,7 +8,6 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 export async function getAdminEmails(): Promise<string[]> {
   const now = Date.now();
 
-  // Return cached emails if still valid
   if (cachedAdminEmails && now - lastFetchTime < CACHE_DURATION) {
     return cachedAdminEmails;
   }
@@ -27,7 +26,7 @@ export async function getAdminEmails(): Promise<string[]> {
     return emails;
   } catch (error) {
     console.error("Error fetching admin emails:", error);
-    // Return cached emails if fetch fails
+
     return cachedAdminEmails || [];
   }
 }
@@ -37,7 +36,6 @@ export async function isAdminEmail(email: string): Promise<boolean> {
   return adminEmails.includes(email);
 }
 
-// Clear cache when needed (e.g., after adding/removing admins)
 export function clearAdminCache() {
   cachedAdminEmails = null;
   lastFetchTime = 0;

@@ -24,11 +24,9 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-orange-50 to-purple-50">
-      {/* Header / Navigation Bar */}
       <nav className="bg-white shadow-md sticky top-0 z-40 border-b-2 border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            {/* Logo/Brand */}
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-[var(--secondary-color)] to-[var(--primary-color)] rounded-xl flex items-center justify-center shadow-lg">
                 <svg
@@ -53,9 +51,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Right Side - User Actions */}
             <div className="flex items-center gap-4">
-              {/* Admin Badge */}
               <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-orange-100 rounded-full">
                 <svg
                   className="w-5 h-5 text-[var(--secondary-color)]"
@@ -75,7 +71,6 @@ export default function AdminDashboard() {
                 </span>
               </div>
 
-              {/* Logout Button */}
               <button
                 onClick={() => setShowLogoutConfirm(true)}
                 className="flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-red-200 text-red-600 rounded-xl font-semibold hover:bg-red-50 hover:border-red-300 transition-all duration-200 shadow-sm"
@@ -100,9 +95,7 @@ export default function AdminDashboard() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
         <div className="mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-[var(--primary-color)]">
             <div className="flex items-start justify-between">
@@ -115,7 +108,7 @@ export default function AdminDashboard() {
                   organizations.
                 </p>
               </div>
-              {/* Quick Stats Icon */}
+
               <div className="hidden lg:block">
                 <div className="w-16 h-16 bg-gradient-to-br from-[var(--secondary-color)] to-[var(--primary-color)] rounded-full flex items-center justify-center opacity-20">
                   <svg
@@ -137,11 +130,9 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Submissions Tabs */}
         <SubmissionsTabs />
       </main>
 
-      {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
@@ -151,7 +142,6 @@ export default function AdminDashboard() {
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
                 <svg
@@ -179,7 +169,6 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Modal Actions */}
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
@@ -222,7 +211,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Footer */}
       <footer className="bg-white border-t-2 border-gray-100 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">

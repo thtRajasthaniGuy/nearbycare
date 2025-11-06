@@ -1,4 +1,3 @@
-// components/map/MapControls.tsx
 "use client";
 import React from "react";
 import { Navigation } from "lucide-react";

@@ -96,7 +96,6 @@ export default function Footer({ className = "" }: FooterProps) {
         </div>
       </footer>
 
-      {/* Suggestion Modal */}
       <SuggestionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

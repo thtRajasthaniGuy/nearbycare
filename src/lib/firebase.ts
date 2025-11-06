@@ -4,7 +4,6 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-// Debug: Log all environment variables that start with NEXT_PUBLIC_FIREBASE
 if (typeof window === "undefined") {
   console.log("🔍 Server-side environment variables:");
   Object.keys(process.env).forEach((key) => {

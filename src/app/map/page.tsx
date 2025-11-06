@@ -94,11 +94,11 @@ export default function MapView() {
 
       const ngoData = result.organizations.map((org: any) => ({
         id: org.id,
-        slug: org.slug || org.id, // Add this line
+        slug: org.slug || org.id,
         name: org.name || "Unnamed Organization",
         category: org.category || "General",
-        type: org.type, // Add this line too if needed
-        city: org.city, // Add this line too if needed
+        type: org.type,
+        city: org.city,
         latitude: org.location?.latitude,
         longitude: org.location?.longitude,
         description: org.description || "",
@@ -142,7 +142,6 @@ export default function MapView() {
       map.current.removeSource("ngos");
     }
 
-    // Filter out invalid coordinates
     const validNGOs = ngos.filter(
       (ngo) =>
         ngo.latitude &&

@@ -117,7 +117,7 @@ export interface OrganizationImage {
   url: string;
   thumbnailUrl: string;
   caption: string | null;
-  uploadedAt: any; // Firestore Timestamp
+  uploadedAt: any;
   order: number;
 }
 
@@ -141,63 +141,50 @@ export type OrganizationStatus =
 export interface Organization {
   orgId: string;
 
-  // Basic Information
   name: string;
   slug: string;
   type: OrganizationType;
   description: string;
   tagline: string | null;
 
-  // Contact Information
   contact: ContactInfo;
 
-  // Location
   address: Address;
   location: Location;
 
-  // Operational Details
   operatingHours: OperatingHours | null;
   visitingInstructions: string | null;
 
-  // Donation Information
   donationTypes: DonationType[];
   wishlist: WishlistItem[];
   donationInstructions: string | null;
 
-  // Media
   images: OrganizationImage[];
   logo: string | null;
 
-  // Verification & Trust
   verificationBadge: VerificationBadge;
   verificationDocuments: VerificationDocument[];
-  lastVerifiedAt: any | null; // Firestore Timestamp
+  lastVerifiedAt: any | null;
   verifiedBy: string | null;
 
-  // Engagement Metrics
   viewCount: number;
   favoriteCount: number;
   reviewCount: number;
   averageRating: number | null;
 
-  // Status Management
   status: OrganizationStatus;
   suspensionReason: string | null;
-  featuredUntil: any | null; // Firestore Timestamp
+  featuredUntil: any | null;
 
-  // Search Optimization
   searchableKeywords: string[];
 
-  // Ownership
   createdBy: string;
   managedBy: string | null;
-  claimedAt: any | null; // Firestore Timestamp
+  claimedAt: any | null;
 
-  // Timestamps
-  createdAt: any; // Firestore Timestamp
-  updatedAt: any; // Firestore Timestamp
-  publishedAt: any | null; // Firestore Timestamp
+  createdAt: any;
+  updatedAt: any;
+  publishedAt: any | null;
 
-  // Schema Management
   schemaVersion: number;
 }

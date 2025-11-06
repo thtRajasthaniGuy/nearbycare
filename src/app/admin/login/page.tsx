@@ -18,7 +18,6 @@ export default function AdminLoginPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Check for unauthorized error from guard
     if (searchParams.get("error") === "unauthorized") {
       setError("You are not authorized to access the admin panel.");
       setUserChecked(true);

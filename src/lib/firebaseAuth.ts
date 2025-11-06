@@ -9,7 +9,6 @@ import { auth } from "./firebase";
 
 const provider = new GoogleAuthProvider();
 
-// Sign in with Google
 export const loginWithGoogle = async (): Promise<User | null> => {
   try {
     const result = await signInWithPopup(auth, provider);
@@ -20,7 +19,6 @@ export const loginWithGoogle = async (): Promise<User | null> => {
   }
 };
 
-// Logout
 export const logout = async () => {
   await signOut(auth);
 };

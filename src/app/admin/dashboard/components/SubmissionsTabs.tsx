@@ -52,7 +52,6 @@ export default function SubmissionsTabs() {
           </button>
         </div>
 
-        {/* Tab Content */}
         <div className="animate-in fade-in slide-in-from-top-2 duration-300">
           {activeTab === "user" ? (
             <UserSubmissionsTable />

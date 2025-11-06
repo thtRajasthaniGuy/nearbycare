@@ -85,7 +85,6 @@ export const NgoInfoModal = ({
         className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="sticky top-0 bg-gradient-to-r from-[var(--secondary-color)] to-[var(--primary-color)] text-white p-6 rounded-t-2xl z-10">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -116,9 +115,7 @@ export const NgoInfoModal = ({
           </div>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6 space-y-6">
-          {/* Status */}
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-gray-600">
               Current Status
@@ -126,7 +123,6 @@ export const NgoInfoModal = ({
             {getStatusBadge()}
           </div>
 
-          {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
               <span className="text-2xl">ℹ️</span>
@@ -150,7 +146,6 @@ export const NgoInfoModal = ({
             </div>
           </div>
 
-          {/* Description */}
           {ngo.description && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
@@ -165,7 +160,6 @@ export const NgoInfoModal = ({
             </div>
           )}
 
-          {/* Address */}
           {(ngo?.address?.street ||
             ngo?.address?.area ||
             ngo?.address?.city ||
@@ -193,7 +187,6 @@ export const NgoInfoModal = ({
             </div>
           )}
 
-          {/* Social Media */}
           {(ngo.facebook || ngo.instagram || ngo.twitter) && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
@@ -239,7 +232,6 @@ export const NgoInfoModal = ({
           )}
         </div>
 
-        {/* Modal Footer */}
         <div className="sticky bottom-0 bg-gray-50 p-6 rounded-b-2xl border-t-2 border-gray-100 flex gap-3 justify-end">
           <button
             onClick={onClose}

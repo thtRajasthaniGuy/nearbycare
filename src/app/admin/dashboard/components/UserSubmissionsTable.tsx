@@ -32,7 +32,7 @@ export default function UserSubmissionsTable() {
     try {
       setLoading(true);
       await ngoRegistered(id);
-      // Update local state
+
       setSubmissions((prev) =>
         prev.map((sub) =>
           sub.id === id ? { ...sub, ngoRegistered: true } : sub
@@ -46,7 +46,6 @@ export default function UserSubmissionsTable() {
     }
   };
 
-  // Loading State
   if (fetchLoading) {
     return (
       <div className="bg-white rounded-2xl shadow-xl p-12 flex flex-col items-center justify-center">
@@ -70,7 +69,6 @@ export default function UserSubmissionsTable() {
   return (
     <>
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* Table Header */}
         <div className="bg-gradient-to-r from-[var(--secondary-color)] to-[var(--primary-color)] p-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <span className="text-3xl">👥</span>
@@ -81,7 +79,6 @@ export default function UserSubmissionsTable() {
           </p>
         </div>
 
-        {/* Statistics Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50 border-b-2 border-gray-100">
           <StatCard
             label="Total Submissions"
@@ -103,7 +100,6 @@ export default function UserSubmissionsTable() {
           />
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-100 border-b-2 border-gray-200">
@@ -254,7 +250,6 @@ export default function UserSubmissionsTable() {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedSubmission && (
         <UserSubmissionModal
           submission={selectedSubmission}

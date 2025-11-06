@@ -1,4 +1,3 @@
-// components/map/NGOInfoCard.tsx
 "use client";
 import React from "react";
 import { Heart, Users, Sparkles, X } from "lucide-react";
@@ -6,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 interface NGOInfoCardProps {
   ngo: {
-    id: string; // Add id
+    id: string;
     name: string;
     category: string;
     city?: string;
@@ -14,7 +13,7 @@ interface NGOInfoCardProps {
     volunteers?: number;
     established?: string;
     type?: string;
-    slug?: string; // Add slug
+    slug?: string;
   };
   categoryColor: string;
   onClose: () => void;
@@ -25,15 +24,6 @@ export const NGOInfoCard: React.FC<NGOInfoCardProps> = ({
   categoryColor,
   onClose,
 }) => {
-  // const router = useRouter();
-
-  // const handleViewDetails = () => {
-  //   // Use slug if available, otherwise use id or name
-  //   const identifier =
-  //     ngo.slug || ngo.id || ngo.name.toLowerCase().replace(/\s+/g, "-");
-  //   router.push(`/ngo/${identifier}`);
-  // }
-
   const router = useRouter();
 
   const handleViewDetails = () => {
@@ -45,8 +35,8 @@ export const NGOInfoCard: React.FC<NGOInfoCardProps> = ({
         ? ngo.name
             .trim()
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-") // safer: removes special chars
-            .replace(/^-+|-+$/g, "") // trim extra dashes
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
         : ngo.id);
     console.log("ngo", ngo);
     router.push(`/map/${slug}`);

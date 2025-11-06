@@ -67,14 +67,12 @@ export const createOrganization = async (
     const organizationData = {
       orgId: userId,
 
-      // Basic Information
       name: formData.name.trim(),
       slug: slug,
       type: formData.type,
       description: formData.description.trim(),
       tagline: formData.tagline.trim() || null,
 
-      // Contact Information
       contact: {
         phone: formData.phone,
         alternatePhone: formData.alternatePhone || null,
@@ -88,7 +86,6 @@ export const createOrganization = async (
         },
       },
 
-      // Location
       address: {
         street: formData.street.trim().toLowerCase(),
         area: formData.area.trim().toLowerCase(),
@@ -105,51 +102,40 @@ export const createOrganization = async (
         formatted_address: formData.formatted_address,
       },
 
-      // Operational Details
       operatingHours: null,
       visitingInstructions: null,
 
-      // Donation Information
       donationTypes: [],
       wishlist: [],
       donationInstructions: null,
 
-      // Media
       images: [],
       logo: userPhotoURL || null,
-
-      // Verification & Trust
 
       verificationBadge: null,
       verificationDocuments: [],
       lastVerifiedAt: null,
       verifiedBy: null,
 
-      // Engagement Metrics
       viewCount: 0,
       favoriteCount: 0,
       reviewCount: 0,
       averageRating: null,
 
-      // Status Management
       status: "pending_verification",
       suspensionReason: null,
       featuredUntil: null,
 
-      // Search Optimization
       searchableKeywords,
 
-      // Ownership
       createdBy: userId,
       managedBy: userId,
       claimedAt: serverTimestamp(),
 
-      // Timestamps
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
       publishedAt: null,
 
-      // Schema Management
       schemaVersion: 1,
     };
 
@@ -237,7 +223,6 @@ export async function getOrganizationBySlug(slug: string): Promise<NGO | null> {
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
-      // fallback if you want to support id-based lookup
       const q2 = query(
         collection(db, "organizations"),
         where("id", "==", slug),

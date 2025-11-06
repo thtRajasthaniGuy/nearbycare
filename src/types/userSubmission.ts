@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 export interface userSubmission {
-  uid?: string; // Firestore auto-generated
+  uid?: string;
   userName: string;
   userEmail?: string;
   ngoName: string;
@@ -9,7 +9,7 @@ export interface userSubmission {
   ngoPhoneNumber?: string;
   ngoAddress: string;
   ngoType?: string;
-  ngoRegistered?: boolean; // default false
+  ngoRegistered?: boolean;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }

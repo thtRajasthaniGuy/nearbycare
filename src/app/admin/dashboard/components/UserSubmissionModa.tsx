@@ -23,7 +23,6 @@ export const UserSubmissionModal = ({
         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="sticky top-0 bg-gradient-to-r from-[var(--secondary-color)] to-[var(--primary-color)] text-white p-6 rounded-t-2xl z-10">
           <div className="flex items-start justify-between">
             <div>
@@ -52,9 +51,7 @@ export const UserSubmissionModal = ({
           </div>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6 space-y-6">
-          {/* Status Badge */}
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-gray-600">Status</span>
             {submission.ngoRegistered ? (
@@ -94,7 +91,6 @@ export const UserSubmissionModal = ({
             )}
           </div>
 
-          {/* NGO Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
               <span className="text-2xl">🏢</span>
@@ -126,7 +122,6 @@ export const UserSubmissionModal = ({
             />
           </div>
 
-          {/* Submitter Information */}
           <div className="space-y-4 pt-4 border-t-2 border-gray-100">
             <h3 className="text-lg font-bold text-[var(--text-dark)] flex items-center gap-2">
               <span className="text-2xl">👤</span>
@@ -143,7 +138,6 @@ export const UserSubmissionModal = ({
           </div>
         </div>
 
-        {/* Modal Footer */}
         <div className="sticky bottom-0 bg-gray-50 p-6 rounded-b-2xl border-t-2 border-gray-100 flex gap-3 justify-end">
           <button
             onClick={onClose}

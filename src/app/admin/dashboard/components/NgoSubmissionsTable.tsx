@@ -36,7 +36,7 @@ export default function NgoSubmissionsTable() {
     try {
       setLoading(true);
       await updateDoc(doc(db, "organizations", id), { status: "active" });
-      // Update local state
+
       setNgos((prev) =>
         prev.map((ngo) => (ngo.id === id ? { ...ngo, status: "active" } : ngo))
       );
@@ -87,7 +87,6 @@ export default function NgoSubmissionsTable() {
   return (
     <>
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* Table Header */}
         <div className="bg-gradient-to-r from-[var(--secondary-color)] to-[var(--primary-color)] p-6">
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <span className="text-3xl">🏢</span>
@@ -98,7 +97,6 @@ export default function NgoSubmissionsTable() {
           </p>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 bg-gray-50 border-b-2 border-gray-100">
           <StatCard
             label="Total Organizations"
@@ -126,7 +124,6 @@ export default function NgoSubmissionsTable() {
           />
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-100 border-b-2 border-gray-200">
@@ -299,7 +296,6 @@ export default function NgoSubmissionsTable() {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedNgo && (
         <NgoInfoModal
           ngo={selectedNgo}

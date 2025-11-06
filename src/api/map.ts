@@ -1,4 +1,3 @@
-// lib/firebase/organizationSearch.ts
 import { db } from "@/lib/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { geocodeAddress, calculateBoundingBox } from "@/lib/getLocation";

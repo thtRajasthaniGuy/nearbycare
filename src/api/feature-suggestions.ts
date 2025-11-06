@@ -21,7 +21,7 @@ export const addSuggestion = async (data: Suggestion) => {
     ...data,
     createdAt: now,
     updatedAt: now,
-    status: "pending", // pending, reviewed, implemented, rejected
+    status: "pending",
   });
   return docRef.id;
 };

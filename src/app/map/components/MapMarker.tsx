@@ -1,4 +1,3 @@
-// components/map/MapMarker.tsx
 "use client";
 import React from "react";
 
@@ -22,7 +21,6 @@ export const MapMarker: React.FC<MapMarkerProps> = ({
   );
 };
 
-// Add these styles to your main component or global CSS
 export const markerStyles = `
   .ngo-marker {
     cursor: pointer;

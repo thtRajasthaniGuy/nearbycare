@@ -17,7 +17,6 @@ export default function AdminGuard({ children }: AdminGuardProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Don't check auth on login page to avoid loops
     if (pathname === "/admin/login") {
       setChecked(true);
       return;
